@@ -139,6 +139,14 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
 .sell-all:disabled{opacity:.35;cursor:not-allowed;filter:none}
 .rarity-eternal{border-color:#16d9ff;box-shadow:inset 0 0 34px #00cfff1c,0 0 12px #00cfff22}
 .rarity-void{border-color:#b44cff;box-shadow:inset 0 0 36px #a000ff22,0 0 14px #a000ff2a}
+.slot.special-luck{border:2px solid #f3d35e;background:linear-gradient(135deg,#2a2108,#b78a19,#f9e8a2,#74520b);box-shadow:inset 0 0 24px #fff6a855,0 0 18px #f2c94c77;color:#fff2b0}
+.slot.special-luck b{font-size:30px;font-style:italic;font-weight:1000;transform:rotate(-13deg);text-shadow:0 2px 8px #000}
+.slot.special-rainbow{border:2px solid transparent;background:linear-gradient(#110b1a,#110b1a) padding-box,linear-gradient(120deg,#ff4f9a,#ffd84d,#58ffad,#54b9ff,#c45bff,#ff4f9a) border-box;box-shadow:0 0 20px #bd61ff88;animation:rainbowPulse 1.4s linear infinite}
+.slot.special-rainbow b{background:linear-gradient(90deg,#ff6c9d,#ffe46b,#6dffb4,#70c9ff,#d28bff);background-clip:text;color:transparent;font-size:20px}
+@keyframes rainbowPulse{50%{filter:brightness(1.35);box-shadow:0 0 30px #bd61ffbb}}
+.slot.special-rainbow img,.slot.special-luck img{display:none}
+.bonus-status{margin:10px 0;padding:10px 12px;border:1px solid #70551f;border-radius:10px;color:#e8cf8b;background:#211707;font-size:12px}
+.rainbow-result{animation:rainbowPulse 1.2s linear infinite;border-color:#d16cff!important}
 .eternal{background:#21dfff;color:#21dfff}
 .void{background:#b04cff;color:#b04cff}
 .case:nth-child(3) .icon,.case:nth-child(4) .icon{filter:drop-shadow(0 0 12px #d3a33f66)}
@@ -193,7 +201,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
           <div class="stat"><span class="muted">Inventarwert</span><b id="invValue">0 $</b></div>
         </div>
       </div>
-      <div class="card odds"><h2 style="margin-top:0">Drop-Chancen</h2><div id="odds"></div>
+      <div class="card odds"><h2 style="margin-top:0">Drop-Chancen</h2><div id="bonusStatus" class="bonus-status">Luck-Stacks: 0 · Rainbow bereit: Nein</div><div id="odds"></div>
         <div class="notice">Innerhalb einer Seltenheit hat jede Waffe die gleiche Chance. Die Chancen sind pro Box gewichtet und summieren sich auf 100 %.</div>
     </aside>
   </div>
@@ -206,7 +214,7 @@ const rarityClass=rarityNames;
 const rarityOrder=['common','uncommon','rare','epic','legendary','mythic','eternal','void'];
 
 const boxes=[
-  {name:'Starter Box',price:50,icon:'📦',poolIndex:0,odds:{common:75,uncommon:14,rare:7,epic:3,legendary:.9,mythic:.1,eternal:0,void:0}},
+  {name:'Starter Box',price:50,icon:'📦',poolIndex:0,odds:{common:65,uncommon:24,rare:7,epic:3,legendary:.9,mythic:.1,eternal:0,void:0}},
   {name:'Pro Box',price:250,icon:'🎁',poolIndex:1,odds:{common:35,uncommon:28,rare:20,epic:11,legendary:5.5,mythic:.5,eternal:0,void:0}},
   {name:'Jackpot Box',price:1000,icon:'💎',poolIndex:4,odds:{common:0,uncommon:35,rare:30,epic:22,legendary:11,mythic:2,eternal:0,void:0}},
   {name:'Royal Box',price:10000,icon:'👑',poolIndex:2,odds:{common:0,uncommon:20,rare:25,epic:25,legendary:18,mythic:11.9,eternal:.1,void:0}},
@@ -214,6 +222,7 @@ const boxes=[
 ];
 
 let selected=0,money=150,opened=0,inventory=[],rolling=false;
+let luckStacks=0,rainbowNext=false;
 
 function fmt(n){return Math.floor(n).toLocaleString('de-DE')}
 function poolForBox(boxIndex){const p=boxes[boxIndex].poolIndex;return Object.fromEntries(rarityOrder.map(r=>[r,weaponPools[r]?.[p]||[]]))}
@@ -230,17 +239,17 @@ function renderCases(){
 function selectBox(i){if(rolling)return;selected=i;renderCases();renderOdds();update()}
 function renderOdds(){
  const o=boxes[selected].odds;
- document.getElementById('odds').innerHTML=rarityOrder.map(r=>`<div class="odds-row"><span><i class="dot ${r}"></i>${rarityNames[r]}</span><b>${o[r].toLocaleString('de-DE')}%</b></div>`).join('')
+ document.getElementById('odds').innerHTML=rarityOrder.map(r=>`<div class="odds-row"><span><i class="dot ${r}"></i>${rarityNames[r]}</span><b>${o[r].toLocaleString('de-DE')}%</b></div>`).join('') + `<div class="odds-row"><span>✦ x2 Luck für nächsten Roll</span><b>1%</b></div><div class="odds-row"><span>🌈 Rainbow für nächste Waffe</span><b>0,5%</b></div>`;
+ updateBonusStatus();
+}
+function updateBonusStatus(){const el=document.getElementById('bonusStatus');if(el)el.textContent=`Luck-Stacks: ${luckStacks} · Luck-Multiplikator: x${Math.pow(2,Math.min(luckStacks,20)).toLocaleString('de-DE')} · Rainbow bereit: ${rainbowNext?'Ja':'Nein'}`;
 }
 function pickRarity(box){
- let roll=Math.random()*100;
- for(const rarity of rarityOrder){
-   const chance=Number(box.odds[rarity]||0);
-   if(chance<=0)continue;
-   roll-=chance;
-   if(roll<=0)return rarity;
- }
- return rarityOrder.slice().reverse().find(r=>(box.odds[r]||0)>0)||'common';
+ const mult=Math.pow(2,Math.min(luckStacks,20));
+ const weighted=rarityOrder.map(r=>({r,w:Number(box.odds[r]||0)*(r==='common'?1:mult)}));
+ const total=weighted.reduce((a,x)=>a+x.w,0);let roll=Math.random()*total;
+ for(const x of weighted){if(x.w<=0)continue;roll-=x.w;if(roll<=0)return x.r;}
+ return weighted.filter(x=>x.w>0).at(-1)?.r||'common';
 }
 function pickItem(boxIndex){
  const box=boxes[boxIndex];
@@ -254,10 +263,9 @@ function pickItem(boxIndex){
  return pool[Math.floor(Math.random()*pool.length)]
 }
 function slotHTML(item){
- return `<div class="slot rarity-${item.rarity}" data-rarity="${item.rarity}">
-   <img src="${item.img}" alt="">
-   <b>${item.name}</b><small>${fmt(item.value)} $</small>
- </div>`
+ if(item.special==='luck')return `<div class="slot special-luck"><b>×2</b><small>LUCK NEXT ROLL</small></div>`;
+ if(item.special==='rainbow')return `<div class="slot special-rainbow"><b>RAINBOW</b><small>2× ITEM-WERT</small></div>`;
+ return `<div class="slot rarity-${item.rarity}" data-rarity="${item.rarity}"><img src="${item.img}" alt=""><b>${item.name}</b><small>${fmt(item.value)} $</small></div>`
 }
 function makeSlots(boxIndex,count=82){
  const b=boxes[boxIndex],arr=[];
@@ -275,7 +283,12 @@ function openBox(){
  const btn=document.getElementById('openBtn');btn.disabled=true;
  const track=document.getElementById('track'),items=document.getElementById('items');
  makeSlots(selected,76);
- const final=pickItem(selected);
+ const luckProc=Math.random()<0.01;
+ const rainbowProc=!luckProc && Math.random()<0.005;
+ const storedLuck=luckStacks,storedRainbow=rainbowNext;
+ let final=luckProc?{special:'luck',name:'×2 Luck',rarity:'luck'}:rainbowProc?{special:'rainbow',name:'Rainbow',rarity:'rainbow'}:(()=>{luckStacks=storedLuck;const picked=pickItem(selected);luckStacks=0;return picked;})();
+ if(final && !final.special){if(storedRainbow)final={...final,value:final.value*2,enchanted:'Rainbow'};rainbowNext=false;}
+ else {luckStacks=storedLuck;rainbowNext=storedRainbow;}
  if(!final){rolling=false;money+=b.price;update();btn.disabled=false;document.getElementById('result').innerHTML='<div class="big">Box-Datenfehler</div><div class="muted">Die Box konnte nicht geöffnet werden. Dein Geld wurde zurückerstattet.</div>';return;}
  const finalIndex=68;
  const node=items.children[finalIndex];
@@ -313,11 +326,12 @@ function finish(item,btn){
  const slots=document.querySelectorAll('#items .slot');
  const winningIndex=68;
  if(slots[winningIndex])slots[winningIndex].classList.add('winner');
- opened++;inventory.unshift(item);rolling=false;
+ opened++;rolling=false;
  const result=document.getElementById('result');
- result.innerHTML=`<img class="result-img" src="${item.img}" alt=""><div class="big">${item.name}</div><div>${rarityNames[item.rarity]}</div><div class="value">+${fmt(item.value)} $ Wert</div>`;
+ if(item.special==='luck'){luckStacks++;result.innerHTML=`<div class="big">✦ ×2 LUCK!</div><div class="value">Dein nächster Roll hat stärkere Chancen auf seltene Waffen.</div><div class="muted">Luck-Stacks: ${luckStacks} · Der Bonus stapelt sich.</div>`;}
+ else if(item.special==='rainbow'){rainbowNext=true;result.innerHTML='<div class="big">🌈 RAINBOW ENCHANTMENT!</div><div class="value">Deine nächste Waffe ist verzaubert und doppelt so viel wert.</div>';}
+ else {inventory.unshift(item);result.innerHTML=`<img class="result-img" src="${item.img}" alt=""><div class="big">${item.name}</div><div>${item.enchanted?'🌈 '+item.enchanted+' · ':''}${rarityNames[item.rarity]}</div><div class="value">+${fmt(item.value)} $ Wert</div>`;if(item.enchanted)result.classList.add('rainbow-result');else result.classList.remove('rainbow-result');showRarityFx(item.rarity);}
  result.classList.add('flash-gold');setTimeout(()=>result.classList.remove('flash-gold'),800);
- showRarityFx(item.rarity);
  btn.disabled=false;renderInventory();update();
 }
 function renderInventory(){
@@ -365,7 +379,7 @@ function update(){
  const sellAllBtn=document.getElementById('sellAllBtn');
  sellAllBtn.textContent=inventory.length?`ALLES VERKAUFEN · ${fmt(total)} $`:'ALLES VERKAUFEN';
  sellAllBtn.disabled=!inventory.length||rolling;
- updateBailout();
+ updateBailout();updateBonusStatus();
 }
 document.getElementById('openBtn').addEventListener('click',openBox);
 document.getElementById('bailoutBtn').addEventListener('click',claimBailout);
