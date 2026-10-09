@@ -29,6 +29,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background-im
 .case-info{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:4px}
 .pool-note{font-size:11px;color:#8f7b51}
 .opening{margin-top:20px}
+.luck-multiplier{margin-left:auto;align-self:center;color:#ffd45c;font-weight:900;font-size:clamp(20px,2.5vw,32px);letter-spacing:.5px;text-shadow:0 0 8px #ffb300,0 0 20px #ffb30066;white-space:nowrap;padding:5px 12px;border:1px solid #d69a25;border-radius:10px;background:linear-gradient(135deg,#2a1b03dd,#100b02dd);}.luck-multiplier[hidden]{display:none!important}
 .track{position:relative;height:156px;border-radius:17px;background:#080705;border:1px solid #674b17;overflow:hidden;box-shadow:inset 0 0 45px #000,0 0 0 1px #000}
 .track::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#000 0,transparent 13%,transparent 87%,#000 100%);z-index:3;pointer-events:none}
 .pointer{position:absolute;z-index:6;left:50%;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 10px #fff,0 0 28px #ffd76a}
@@ -205,7 +206,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
         <div class="case-row" id="cases"></div>
         <div class="opening">
           <div class="track" id="track"><div class="pointer"></div><div class="items" id="items"></div></div>
-          <div class="controls"><button class="btn" id="openBtn">BOX ÖFFNEN</button></div>
+          <div class="controls"><button class="btn" id="openBtn">BOX ÖFFNEN</button><div id="luckMultiplierDisplay" class="luck-multiplier" hidden>LUCK ×2</div></div>
           <div class="result" id="result"><div class="muted">Bereit? Die Walze entscheidet. Viel Glück.</div></div>
         </div>
       </div>
@@ -281,7 +282,7 @@ function renderOdds(){
  document.getElementById('odds').innerHTML=rarityOrder.map(r=>`<div class="odds-row"><span><i class="dot ${r}"></i>${rarityNames[r]}</span><b>${o[r].toLocaleString('de-DE')}%</b></div>`).join('') + `<div class="odds-row"><span>✦ x2 Luck für nächsten Roll</span><b>1%</b></div><div class="odds-row"><span>🌈 Rainbow für nächste Waffe</span><b>0,5%</b></div>`;
  updateBonusStatus();
 }
-function updateBonusStatus(){const el=document.getElementById('bonusStatus');if(el)el.textContent=`Luck-Stacks: ${luckStacks} · Luck-Multiplikator: x${Math.pow(2,Math.min(luckStacks,20)).toLocaleString('de-DE')} · Rainbow bereit: ${rainbowNext?'Ja':'Nein'}`;
+function updateBonusStatus(){const el=document.getElementById('bonusStatus');const jackpotMult=Math.pow(4,Math.min(Number(jackpotLuckNext)||0,10));const luckMult=Math.pow(2,Math.min(Number(luckStacks)||0,20));const totalMult=luckMult*jackpotMult;if(el)el.textContent=`Luck-Stacks: ${luckStacks} · Luck-Multiplikator: ×${totalMult.toLocaleString('de-DE')} · Rainbow bereit: ${rainbowNext?'Ja':'Nein'}`;const display=document.getElementById('luckMultiplierDisplay');if(display){display.hidden=totalMult<=1;display.textContent=`LUCK ×${totalMult.toLocaleString('de-DE')}`;display.title=`Aktiver Luck-Multiplikator: ×${totalMult.toLocaleString('de-DE')}`;}
 }
 function pickRarity(box){
  const mult=Math.pow(2,Math.min(luckStacks,20))*Math.pow(4,Math.min(jackpotLuckNext,10));
