@@ -222,6 +222,12 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
       </div>
       <div class="card odds"><h2 style="margin-top:0">Drop-Chancen</h2><div id="bonusStatus" class="bonus-status">Luck-Stacks: 0 · Rainbow bereit: Nein</div><div id="odds"></div>
         <div class="notice">Innerhalb einer Seltenheit hat jede Waffe die gleiche Chance. Die Chancen sind pro Box gewichtet und summieren sich auf 100 %.</div>
+      </div>
+      <div class="card" id="marketPanel" style="margin-top:14px">
+        <h2 style="margin-top:0">📈 Waffenmarkt</h2>
+        <div class="market-row"><span>Aktueller Markt-Multiplikator</span><b class="market-price" id="marketMultiplierValue">1,00×</b></div>
+        <div class="notice">Der Markt-Multiplikator verändert den tatsächlichen Verkaufspreis deiner Waffen. Du kannst verkaufen oder auf einen besseren Kurs warten.</div>
+      </div>
     </aside>
   </div>
   <div class="feature-grid">
@@ -416,7 +422,7 @@ function claimBailout(){
  document.getElementById('result').innerHTML='<div class="big">✦ 50 $ Bonus erhalten!</div><div class="muted">Dein Glück kann weitergehen.</div>';
  update();
 }
-function update(){
+function update(){const mm=document.getElementById('marketMultiplierValue');if(mm)mm.textContent=marketMultiplier().toFixed(2).replace('.',',')+'×';
  document.getElementById('money').textContent=fmt(money);
  document.getElementById('opened').textContent=opened;
  document.getElementById('invValue').textContent=fmt(inventory.reduce((a,x)=>a+marketPrice(x),0))+' $';
@@ -433,13 +439,7 @@ function renderCollection(){const unique=allUniqueWeapons().filter(x=>x&&x.name)
 function renderQuests(){ensureDailyQuests();document.getElementById('questDate').textContent='Täglicher Reset · '+questState.day;document.getElementById('questList').innerHTML=questDefs().map((q,i)=>{const done=q.progress>=q.goal,claimed=questState.claimed[i];return `<div class="quest"><b>${q.name} · ${q.reward.toLocaleString('de-DE')} $</b>${q.desc}<div class="progress"><span style="width:${Math.min(100,q.progress/q.goal*100)}%"></span></div><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">${q.progress}/${q.goal}</span><button class="btn claim-btn" ${(!done||claimed||rolling)?'disabled':''} onclick="claimQuest(${i})">${claimed?'ERHALTEN':done?'ABHOLEN':'IN ARBEIT'}</button></div></div>`}).join('');}
 function claimQuest(i){ensureDailyQuests();const q=questDefs()[i];if(!q||q.progress<q.goal||questState.claimed[i]||rolling)return;questState.claimed[i]=true;money+=q.reward;document.getElementById('result').innerHTML=`<div class="big">Quest abgeschlossen!</div><div class="value">+${fmt(q.reward)} $</div>`;update();renderQuests();}
 function claimJackpot(){if(jackpotProgress<100||rolling)return;jackpotClaims++;jackpotProgress=0;jackpotLuckNext++;document.getElementById('jackpotMessage').textContent='Jackpot abgeholt! Dein nächster Waffen-Roll ist 4× luckier.';update();}
-function renderAchievements(){
- const list=[['Erster Roll',opened>=1,'Öffne deine erste Box'],['Sammler',foundWeapons.size>=10,'Entdecke 10 verschiedene Waffen'],['Glückspilz',highDrops>=1,'Finde eine legendäre oder seltenere Waffe'],['Händler',soldTotal>=10000,'Verkaufe Waffen im Wert von 10.000 $'],['Boxen-Profi',opened>=100,'Öffne 100 Boxen']];
- let el=document.getElementById('achievements');
- if(!el){el=document.createElement('div');el.id='achievements';el.className='card';el.style.marginTop='14px';el.innerHTML='<h2>Achievements</h2><div id="achievementList"></div>';document.querySelector('.stats')?.appendChild(el);}
- document.getElementById('achievementList').innerHTML=list.map(([n,done,d])=>`<div class="market-row"><span>${done?'🏅':'🔒'} <b>${n}</b><br><small class="muted">${d}</small></span><b>${done?'Freigeschaltet':'Offen'}</b></div>`).join('');
-}
-function renderProgressPanels(){renderAchievements();renderCollection();renderQuests();document.getElementById('highDrops').textContent=highDrops;document.getElementById('bestDrop').innerHTML=bestDrop?`${bestDrop.name} <small style="display:block;text-align:right;font-size:10px;color:var(--muted);font-weight:500">${fmt(bestDrop.value)} $</small>`:'—';document.getElementById('soldTotal').textContent=fmt(soldTotal)+' $';document.getElementById('luckRecord').textContent=`Letzter Drop: ${lastDrop} · Jackpot-Boni abgeholt: ${jackpotClaims}`;document.getElementById('jackpotProgress').style.width=(jackpotProgress/100*100)+'%';document.getElementById('jackpotCount').textContent=`${jackpotProgress}/100`;document.getElementById('claimJackpot').disabled=jackpotProgress<100||rolling;document.getElementById('jackpotMessage').textContent=jackpotLuckNext?`Jackpot-Bonus bereit: ${jackpotLuckNext}× 4×-Luck-Roll(s) verfügbar!`:jackpotProgress>=100?'Jackpot bereit — du kannst ihn jederzeit abholen.':'Bei 100 Öffnungen kannst du deinen Jackpot abholen.';}
+function renderProgressPanels(){renderCollection();renderQuests();document.getElementById('highDrops').textContent=highDrops;document.getElementById('bestDrop').innerHTML=bestDrop?`${bestDrop.name} <small style="display:block;text-align:right;font-size:10px;color:var(--muted);font-weight:500">${fmt(bestDrop.value)} $</small>`:'—';document.getElementById('soldTotal').textContent=fmt(soldTotal)+' $';document.getElementById('luckRecord').textContent=`Letzter Drop: ${lastDrop} · Jackpot-Boni abgeholt: ${jackpotClaims}`;document.getElementById('jackpotProgress').style.width=(jackpotProgress/100*100)+'%';document.getElementById('jackpotCount').textContent=`${jackpotProgress}/100`;document.getElementById('claimJackpot').disabled=jackpotProgress<100||rolling;document.getElementById('jackpotMessage').textContent=jackpotLuckNext?`Jackpot-Bonus bereit: ${jackpotLuckNext}× 4×-Luck-Roll(s) verfügbar!`:jackpotProgress>=100?'Jackpot bereit — du kannst ihn jederzeit abholen.':'Bei 100 Öffnungen kannst du deinen Jackpot abholen.';}
 
 document.getElementById('claimJackpot').addEventListener('click',claimJackpot);
 document.getElementById('openBtn').addEventListener('click',openBox);
