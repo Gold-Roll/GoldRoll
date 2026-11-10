@@ -173,6 +173,67 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
 @keyframes revealCommon{from{filter:brightness(1.5)}to{filter:brightness(1)}}@keyframes revealGreen{50%{box-shadow:0 0 26px #26ff8c66}}@keyframes revealBlue{50%{box-shadow:0 0 34px #168dff88}}@keyframes revealPurple{50%{box-shadow:0 0 42px #c42cff99}}@keyframes revealGold{0%,100%{filter:brightness(1)}35%{filter:brightness(1.9);box-shadow:0 0 50px #ffcb47}}@keyframes revealRed{0%,100%{filter:brightness(1)}35%{filter:brightness(2);box-shadow:0 0 60px #ff183c}}@keyframes revealCyan{35%{filter:brightness(2);box-shadow:0 0 60px #00eaff}}@keyframes revealVoid{35%{filter:brightness(2.1) hue-rotate(30deg);box-shadow:0 0 65px #d52cff}}
 @media(max-width:850px){.feature-grid{grid-template-columns:1fr}}
 
+
+.reel-container{display:grid;gap:10px}.reel-container .track{height:142px}.reel-container .items{top:5px;height:132px}.reel-container .slot{height:126px}
+.achievement{padding:10px 12px;margin:8px 0;border:1px solid #5f4616;border-radius:12px;background:#100c06}.achievement b{color:var(--gold2)}.achievement .progress{margin:7px 0 3px}
+.rarity-market{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.market-tier{display:flex;justify-content:space-between;gap:6px;padding:7px 9px;border:1px solid #5f4616;border-radius:9px;background:#100c06;font-size:12px}.market-tier b{color:var(--gold2)}
+
+/* GOLDROLL long-term progression, events, forge and weapon inspection */
+.feature-card.full{grid-column:1/-1}
+.system-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.system-stat{padding:10px;border:1px solid #4c3919;border-radius:10px;background:#0d0a06}
+.system-stat b{display:block;color:#ffe29a;font-size:18px;margin-top:3px}
+.system-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.system-actions .btn{font-size:11px;padding:9px 12px}
+.xp-track{height:10px;border-radius:99px;background:#302515;overflow:hidden;margin:8px 0}
+.xp-track span{display:block;height:100%;background:linear-gradient(90deg,#5b8cff,#9de4ff);transition:width .3s}
+.event-banner{border:1px solid #6b511e;border-radius:12px;padding:12px;background:linear-gradient(120deg,#171108,#211707);display:flex;justify-content:space-between;gap:12px;align-items:center}
+.event-banner b{color:#ffe29a}.event-tag{font-size:10px;color:#a9956b}
+.forge-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:260px;overflow:auto}
+.forge-card{background:#0d0a06;border:1px solid #4b3818;border-radius:10px;padding:9px;font-size:11px}
+.forge-card img{width:100%;height:54px;object-fit:contain}
+.forge-card b{display:block;color:#ffe29a}
+.forge-card button{width:100%;margin-top:7px}
+.secret-row{padding:8px 10px;margin:6px 0;border:1px solid #4c3919;border-radius:9px;background:#0d0a06;font-size:11px}
+.secret-row.locked{opacity:.5}
+.inspect-overlay{position:fixed;inset:0;z-index:1000;background:#030205ed;display:none;align-items:center;justify-content:center;padding:16px}
+.inspect-overlay.active{display:flex}
+.inspect-panel{position:relative;width:min(900px,100%);border:1px solid #5e4b86;border-radius:18px;background:radial-gradient(circle at 50% 25%,#17132b,#09070e 65%);box-shadow:0 25px 90px #000c;padding:20px;overflow:hidden}
+.inspect-panel.eternal{border-color:#25cfff;box-shadow:0 0 45px #00cfff22,0 25px 90px #000c}
+.inspect-panel.void{border-color:#b45cff;box-shadow:0 0 45px #a000ff22,0 25px 90px #000c}
+.inspect-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative;z-index:3}
+.inspect-head h2{margin:0;color:#fff}
+.inspect-stage{height:300px;position:relative;display:grid;place-items:center;perspective:900px;overflow:hidden;touch-action:none;cursor:grab}
+.inspect-stage:active{cursor:grabbing}
+.inspect-model{width:470px;height:190px;position:relative;transform-style:preserve-3d;will-change:transform}
+.gun-part{position:absolute;display:block;transform-style:preserve-3d;border:1px solid #8e9bad66;background:linear-gradient(180deg,#9ca9b8,#333d4c 35%,#111923 70%,#657184);box-shadow:inset 0 2px 3px #ffffff66,inset 0 -4px 7px #000a,0 8px 12px #0009}
+.gun-barrel{left:245px;top:76px;width:190px;height:17px;border-radius:4px;background:linear-gradient(180deg,#b6c1ce,#202a38 45%,#647184)}
+.gun-muzzle{left:423px;top:70px;width:22px;height:29px;border-radius:4px;background:linear-gradient(90deg,#111,#8794a5,#111)}
+.gun-body{left:145px;top:61px;width:145px;height:48px;border-radius:8px 12px 7px 7px;background:linear-gradient(180deg,#c0cad5,#364354 30%,#111a25 72%,#758296)}
+.gun-body:after{content:'';position:absolute;inset:3px;background-image:var(--weapon-image);background-size:contain;background-repeat:no-repeat;background-position:center;opacity:.82;filter:drop-shadow(0 0 5px #ffffff55)}
+.gun-upper{left:170px;top:48px;width:105px;height:17px;border-radius:5px;background:linear-gradient(180deg,#aeb9c8,#273344)}
+.gun-stock{left:50px;top:69px;width:105px;height:32px;clip-path:polygon(0 0,100% 10%,100% 90%,12% 100%);background:linear-gradient(180deg,#8794a6,#1c2634 70%,#5d6b80)}
+.gun-grip{left:185px;top:103px;width:37px;height:67px;clip-path:polygon(0 0,100% 0,85% 100%,15% 100%);background:linear-gradient(90deg,#141c28,#738096,#111923)}
+.gun-mag{left:238px;top:105px;width:35px;height:68px;clip-path:polygon(0 0,100% 0,90% 100%,10% 100%);background:linear-gradient(90deg,#131b27,#8994a4,#151d29)}
+.gun-scope{left:190px;top:28px;width:60px;height:18px;border-radius:6px;background:linear-gradient(180deg,#b8c2d0,#202b3b 55%,#59677a)}
+.gun-scope:before,.gun-scope:after{content:"";position:absolute;top:3px;width:9px;height:12px;background:#101722;border:1px solid #8794a5}
+.gun-scope:before{left:4px}.gun-scope:after{right:4px}
+.gun-trigger{left:220px;top:109px;width:22px;height:24px;border:3px solid #7d8a9b;border-top:0;border-radius:0 0 12px 12px;background:transparent;box-shadow:none}
+.gun-detail{left:158px;top:72px;width:110px;height:5px;border:0;background:#d2dbe8;opacity:.5;box-shadow:none}
+.inspect-panel.eternal .gun-part{box-shadow:inset 0 2px 3px #ffffff66,inset 0 -4px 7px #000a,0 0 13px #32dfff33,0 8px 12px #0009}
+.inspect-panel.void .gun-part{box-shadow:inset 0 2px 3px #ffffff66,inset 0 -4px 7px #000a,0 0 13px #c15cff44,0 8px 12px #0009}
+.inspect-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.inspect-particles i{position:absolute;width:4px;height:4px;border-radius:50%;background:#69eaff;box-shadow:0 0 12px 3px #26cfff;animation:inspectFloat 3.2s ease-in-out infinite}
+.inspect-panel.void .inspect-particles i{background:#d58aff;box-shadow:0 0 12px 3px #a83cff}
+@keyframes inspectFloat{0%,100%{transform:translate3d(0,15px,0) scale(.7);opacity:.25}50%{transform:translate3d(14px,-28px,0) scale(1.4);opacity:1}}
+.inspect-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#c9bfdc;font-size:12px;border-top:1px solid #ffffff18;padding-top:12px}
+.inspect-hint{font-size:11px;color:#9e94b4;text-align:center;margin-top:-8px}
+.inspect-close{background:#24172e;border:1px solid #765b91;color:#fff;border-radius:9px;padding:8px 12px;cursor:pointer}
+.inventory-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.inventory-actions button{font-size:10px;padding:6px 8px}
+@media(max-width:600px){.inspect-panel{padding:14px}.inspect-stage{height:230px}.inspect-model{transform:scale(.75);transform-origin:center}.system-grid{grid-template-columns:1fr}}
+.reveal-eternal,.reveal-void{animation:none!important}
+
 </style>
 </head>
 <body>
@@ -205,7 +266,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
         </div>
         <div class="case-row" id="cases"></div>
         <div class="opening">
-          <div class="track" id="track"><div class="pointer"></div><div class="items" id="items"></div></div>
+          <div id="reelContainer" class="reel-container"><div class="track" id="track"><div class="pointer"></div><div class="items" id="items"></div></div></div>
           <div class="controls"><button class="btn" id="openBtn">BOX ÖFFNEN</button><div id="luckMultiplierDisplay" class="luck-multiplier" hidden>LUCK ×2</div></div>
           <div class="result" id="result"><div class="muted">Bereit? Die Walze entscheidet. Viel Glück.</div></div>
         </div>
@@ -225,17 +286,35 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
       </div>
       <div class="card" id="marketPanel" style="margin-top:14px">
         <h2 style="margin-top:0">📈 Waffenmarkt</h2>
-        <div class="market-row"><span>Aktueller Markt-Multiplikator</span><b class="market-price" id="marketMultiplierValue">1,00×</b></div>
-        <div class="notice">Der Markt-Multiplikator verändert den tatsächlichen Verkaufspreis deiner Waffen. Du kannst verkaufen oder auf einen besseren Kurs warten.</div>
+        <div class="market-row"><span>Markt-Update in</span><b class="market-price" id="marketCountdown">03:00</b></div><div id="rarityMarket" class="rarity-market"></div>
+        <div class="notice">Jede Seltenheit hat einen eigenen Multiplikator. Alle 3 Minuten ändern sich die Kurse; hohe Multiplikatoren sind seltener.</div>
       </div>
     </aside>
   </div>
   <div class="feature-grid">
+    <section class="feature-card"><h2>🏅 Achievements & Walzen</h2><p id="achievementSummary">Schalte zusätzliche Walzen und schnelleres Rollen durch Fortschritt frei.</p><div id="achievementList"></div></section>
     <section class="feature-card"><h2>📚 Waffensammlung</h2><p id="collectionSummary">Entdecke Waffen und schalte Sammelboni frei.</p><div class="progress"><span id="collectionProgress"></span></div><div class="collection-grid" id="collectionGrid"></div></section>
     <section class="feature-card"><h2>📅 Tägliche Quests</h2><p id="questDate"></p><div id="questList"></div></section>
     <section class="feature-card"><h2>🏆 Jackpot-Event</h2><p>Alle 100 Box-Öffnungen kannst du den Jackpot abholen: Er macht deinen nächsten Waffen-Roll 4× luckier. Kein Geldbonus.</p><div class="jackpot-bar"><div class="progress"><span id="jackpotProgress"></span></div><b id="jackpotCount">0/100</b><button class="btn claim-btn" id="claimJackpot" disabled>ABHOLEN</button></div><p id="jackpotMessage">Dein nächster Meilenstein wartet.</p></section>
     <section class="feature-card"><h2>📊 Luck-Tracker</h2><div class="stats"><div class="stat"><span class="muted">Legendär+</span><b id="highDrops">0</b></div><div class="stat"><span class="muted">Bester Drop</span><b id="bestDrop">—</b></div><div class="stat"><span class="muted">Verkaufserlös</span><b id="soldTotal">0 $</b></div></div><p id="luckRecord">Deine Drop-Historie wird hier gesammelt.</p></section>
+    <section class="feature-card"><h2>⭐ Level & Erfahrung</h2><div class="system-grid"><div class="system-stat">Spieler-Level<b id="playerLevel">Level 1</b></div><div class="system-stat">Gesamt-XP<b id="totalXp">0 XP</b></div></div><div class="xp-track"><span id="xpProgress" style="width:0%"></span></div><p id="xpLabel">0 / 100 XP bis zum nächsten Level</p><p id="levelRewardText">Jeder Roll gibt Erfahrung. Levelaufstiege bringen Geld und gelegentlich Schmiedestaub.</p></section>
+    <section class="feature-card"><h2>🔥 Zeitlich wechselndes Event</h2><div class="event-banner"><div><div class="event-tag">AKTIVES EVENT</div><b id="eventName">Wird geladen …</b><p id="eventDesc">Wechselnde Boni für deine Rolls.</p></div><b id="eventTimer">30:00</b></div><p id="eventHistory" class="muted">Events wechseln automatisch und benötigen keine tägliche Anmeldung.</p></section>
+    <section class="feature-card full"><h2>⚒️ Waffen-Schmiede</h2><p>Jeder neue Drop bleibt im Inventar. Doppelte Waffen liefern zusätzlich Schmiedestaub. Verwende ihn, um entdeckte Waffen bis Level 5 aufzuwerten und ihren Marktwert dauerhaft zu steigern.</p><div class="system-grid"><div class="system-stat">Schmiedestaub<b id="forgeDust">0</b></div><div class="system-stat">Prestige-Münzen<b id="prestigeTokens">0</b></div></div><div class="forge-list" id="forgeList"></div></section>
+    <section class="feature-card"><h2>🏅 Verborgene Achievements</h2><p>Einige Erfolge bleiben geheim, bis du ihre Bedingungen erfüllst.</p><div id="secretAchievements"></div></section>
+    <section class="feature-card"><h2>♛ Prestige</h2><p id="prestigeDesc">Erreiche hohe Level und viele All-Time Rolls, um Prestige freizuschalten.</p><div class="system-grid"><div class="system-stat">Prestige<b id="prestigeLevel">0</b></div><div class="system-stat">Permanenter Verkaufsbonus<b id="prestigeBonus">+0%</b></div></div><div class="system-actions"><button class="btn" id="prestigeBtn" disabled>PRESTIGE NOCH GESPERRT</button></div></section>
   </div>
+</div>
+
+
+<div class="inspect-overlay" id="inspectOverlay" aria-hidden="true">
+ <div class="inspect-panel" id="inspectPanel">
+  <div class="inspect-head"><div><div class="event-tag" id="inspectRarity">ETERNAL</div><h2 id="inspectName">Waffen-Inspektion</h2></div><button class="inspect-close" id="inspectClose">SCHLIESSEN ✕</button></div>
+  <div class="inspect-stage" id="inspectStage"><div class="inspect-particles" id="inspectParticles"></div><div class="inspect-model" id="inspectModel" aria-label="Drehbares 3D-Waffenmodell">
+   <i class="gun-part gun-stock"></i><i class="gun-part gun-body"></i><i class="gun-part gun-upper"></i><i class="gun-part gun-barrel"></i><i class="gun-part gun-muzzle"></i><i class="gun-part gun-grip"></i><i class="gun-part gun-mag"></i><i class="gun-part gun-scope"></i><i class="gun-part gun-trigger"></i><i class="gun-part gun-detail"></i>
+  </div></div>
+  <div class="inspect-hint">Maus ziehen oder Finger bewegen, um die Waffe zu drehen · Scrollen zum Zoomen</div>
+  <div class="inspect-meta"><span id="inspectValue">Marktwert: —</span><span id="inspectLevel">Upgrade: Level 0/5</span><span id="inspectType">3D-Modell · Partikeleffekt</span></div>
+ </div>
 </div>
 
 <script>
@@ -257,9 +336,14 @@ let luckStacks=0,rainbowNext=false;
 const SAVE_KEY='goldroll-save-v3';
 const rarityList=['common','uncommon','rare','epic','legendary','mythic','eternal','void'];
 let foundWeapons=new Set(), collectionRewards=[], questState={}, jackpotProgress=0, jackpotClaims=0, jackpotLuckNext=false, soldTotal=0, highDrops=0, bestDrop=null, lastDrop='Noch kein Drop', market={};
+
 let marketTick=0;
-function loadGame(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(!d)return;money=Number.isFinite(d.money)?d.money:150;opened=d.opened||0;inventory=Array.isArray(d.inventory)?d.inventory:[];luckStacks=d.luckStacks||0;rainbowNext=!!d.rainbowNext;foundWeapons=new Set(d.foundWeapons||[]);collectionRewards=d.collectionRewards||[];questState=d.questState||{};jackpotProgress=d.jackpotProgress||0;jackpotClaims=d.jackpotClaims||0;jackpotLuckNext=Number(d.jackpotLuckNext)||0;soldTotal=d.soldTotal||0;highDrops=d.highDrops||0;bestDrop=d.bestDrop||null;lastDrop=d.lastDrop||lastDrop;market=d.market||{};marketTick=d.marketTick||0;}catch(e){console.warn('Save konnte nicht geladen werden',e)}}
-function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({money,opened,inventory,luckStacks,rainbowNext,foundWeapons:[...foundWeapons],collectionRewards,questState,jackpotProgress,jackpotClaims,jackpotLuckNext,soldTotal,highDrops,bestDrop,lastDrop,market,marketTick}));}catch(e){console.warn('Save konnte nicht gespeichert werden',e)}}
+let playerLevel=1,playerXp=0,totalXp=0,forgeDust=0,prestige=0,prestigeTokens=0;
+let weaponUpgrades={},secretUnlocked=[],lastRarityDrop='',rarityRun=0;
+const LONG_SAVE_DEFAULTS={playerLevel:1,playerXp:0,totalXp:0,forgeDust:0,prestige:0,prestigeTokens:0,weaponUpgrades:{},secretUnlocked:[],lastRarityDrop:'',rarityRun:0};
+
+function loadGame(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(!d)return;money=Number.isFinite(d.money)?d.money:150;opened=d.opened||0;inventory=Array.isArray(d.inventory)?d.inventory:[];luckStacks=d.luckStacks||0;rainbowNext=!!d.rainbowNext;foundWeapons=new Set(d.foundWeapons||[]);collectionRewards=d.collectionRewards||[];questState=d.questState||{};jackpotProgress=d.jackpotProgress||0;jackpotClaims=d.jackpotClaims||0;jackpotLuckNext=Number(d.jackpotLuckNext)||0;soldTotal=d.soldTotal||0;highDrops=d.highDrops||0;bestDrop=d.bestDrop||null;lastDrop=d.lastDrop||lastDrop;market=d.market||{};marketTick=d.marketTick||0;playerLevel=Math.max(1,Number(d.playerLevel)||1);playerXp=Math.max(0,Number(d.playerXp)||0);totalXp=Math.max(0,Number(d.totalXp)||0);forgeDust=Math.max(0,Number(d.forgeDust)||0);prestige=Math.max(0,Number(d.prestige)||0);prestigeTokens=Math.max(0,Number(d.prestigeTokens)||0);weaponUpgrades=d.weaponUpgrades&&typeof d.weaponUpgrades==='object'?d.weaponUpgrades:{};secretUnlocked=Array.isArray(d.secretUnlocked)?d.secretUnlocked:[];lastRarityDrop=d.lastRarityDrop||'';rarityRun=Math.max(0,Number(d.rarityRun)||0);}catch(e){console.warn('Save konnte nicht geladen werden',e)}}
+function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({money,opened,inventory,luckStacks,rainbowNext,foundWeapons:[...foundWeapons],collectionRewards,questState,jackpotProgress,jackpotClaims,jackpotLuckNext,soldTotal,highDrops,bestDrop,lastDrop,market,marketTick,playerLevel,playerXp,totalXp,forgeDust,prestige,prestigeTokens,weaponUpgrades,secretUnlocked,lastRarityDrop,rarityRun}));}catch(e){console.warn('Save konnte nicht gespeichert werden',e)}}
 loadGame();
 
 function fmt(n){return Math.floor(n).toLocaleString('de-DE')}
@@ -268,9 +352,13 @@ function ensureDailyQuests(){const day=todayKey();if(questState.day!==day){quest
 function questDefs(){return [{name:'Warm-up',desc:'Öffne 3 Boxen',goal:3,reward:300,progress:questState.progress?.[0]||0},{name:'Entdecker',desc:'Entdecke 2 neue Waffen',goal:2,reward:450,progress:questState.progress?.[1]||0},{name:'Großer Sammler',desc:'Öffne 15 Boxen',goal:15,reward:1200,progress:questState.progress?.[2]||0}]}
 function bumpQuest(i,n=1){ensureDailyQuests();questState.progress[i]=Math.min(questDefs()[i].goal,(questState.progress[i]||0)+n);}
 function itemKey(item){return `${item.rarity}|${item.name}`}
-function marketMultiplier(){return 1 + 0.25*Math.sin(marketTick/3);}
-function marketPrice(item){return Math.max(1,Math.round((item.value||0)*marketMultiplier()))}
-function marketLabel(){const m=marketMultiplier();return `${m>=1?'+':''}${Math.round((m-1)*100)}%`; }
+const MARKET_INTERVAL=180000;
+const marketOdds=[{v:.1,w:18},{v:.25,w:17},{v:.5,w:15},{v:.75,w:13},{v:1,w:12},{v:1.25,w:9},{v:1.5,w:7},{v:1.8,w:4},{v:2,w:3},{v:2.5,w:2}];
+function randomMarketMultiplier(){let n=Math.random()*marketOdds.reduce((a,x)=>a+x.w,0);for(const x of marketOdds){n-=x.w;if(n<=0)return x.v;}return .1;}
+function ensureMarket(){const now=Date.now();for(const r of rarityList){const entry=market[r];if(!entry||!Number.isFinite(entry.multiplier)||!entry.updatedAt||now-entry.updatedAt>=MARKET_INTERVAL){market[r]={multiplier:randomMarketMultiplier(),updatedAt:now};}}}
+function marketMultiplier(rarity='common'){ensureMarket();return Number(market[rarity]?.multiplier)||.1;}
+function marketPriceOriginalBase(item){return Math.max(1,Math.round((item.value||0)*marketMultiplier(item.rarity)))}
+function renderMarket(){ensureMarket();const names={common:'Gewöhnlich',uncommon:'Ungewöhnlich',rare:'Selten',epic:'Episch',legendary:'Legendär',mythic:'Mythisch',eternal:'Eternal',void:'Void'};const el=document.getElementById('rarityMarket');if(el)el.innerHTML=rarityList.map(r=>`<div class="market-tier"><span>${names[r]}</span><b>${marketMultiplier(r).toFixed(2).replace('.',',')}×</b></div>`).join('');const left=Math.max(0,MARKET_INTERVAL-(Date.now()-Math.min(...rarityList.map(r=>market[r]?.updatedAt||Date.now()))));const cd=document.getElementById('marketCountdown');if(cd)cd.textContent=`${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`;}
 function revealClass(r){return 'reveal-'+(r||'common')}
 
 function poolForBox(boxIndex){const p=boxes[boxIndex].poolIndex;return Object.fromEntries(rarityOrder.map(r=>[r,weaponPools[r]?.[p]||[]]))}
@@ -290,12 +378,12 @@ function renderOdds(){
  const luckFactor=Math.pow(2,Math.max(0,luckStacks))*(jackpotLuckNext?4:1);
  const weighted=rarityOrder.map((r,i)=>({r,w:Math.max(0,o[r]||0)*Math.pow(i+1,luckFactor>1?Math.log2(luckFactor):0)}));
  const total=weighted.reduce((s,x)=>s+x.w,0)||1;
- document.getElementById('odds').innerHTML=weighted.map(x=>`<div class="odds-row"><span><i class="dot ${x.r}"></i>${rarityNames[x.r]}</span><b>${(100*x.w/total).toLocaleString('de-DE',{maximumFractionDigits:2})}%</b></div>`).join('') + `<div class="odds-row"><span>✦ x2 Luck für nächsten Roll</span><b>1%</b></div><div class="odds-row"><span>🌈 Rainbow für nächste Waffe</span><b>0,5%</b></div><div class="market-row"><span>Markt-Multiplikator</span><b class="market-price">${marketMultiplier().toFixed(2).replace('.',',')}×</b></div>`;
+ document.getElementById('odds').innerHTML=weighted.map(x=>`<div class="odds-row"><span><i class="dot ${x.r}"></i>${rarityNames[x.r]}</span><b>${(100*x.w/total).toLocaleString('de-DE',{maximumFractionDigits:2})}%</b></div>`).join('') + `<div class="odds-row"><span>✦ x2 Luck für nächsten Roll</span><b>1%</b></div><div class="odds-row"><span>🌈 Rainbow für nächste Waffe</span><b>0,5%</b></div>`;
  updateBonusStatus();
 }
 function updateBonusStatus(){const el=document.getElementById('bonusStatus');const jackpotMult=Math.pow(4,Math.min(Number(jackpotLuckNext)||0,10));const luckMult=Math.pow(2,Math.min(Number(luckStacks)||0,20));const totalMult=luckMult*jackpotMult;if(el)el.textContent=`Luck-Stacks: ${luckStacks} · Luck-Multiplikator: ×${totalMult.toLocaleString('de-DE')} · Rainbow bereit: ${rainbowNext?'Ja':'Nein'}`;const display=document.getElementById('luckMultiplierDisplay');if(display){display.hidden=totalMult<=1;display.textContent=`LUCK ×${totalMult.toLocaleString('de-DE')}`;display.title=`Aktiver Luck-Multiplikator: ×${totalMult.toLocaleString('de-DE')}`;}
 }
-function pickRarity(box){
+function pickRarityOriginalBase(box){
  const mult=Math.pow(2,Math.min(luckStacks,20))*Math.pow(4,Math.min(jackpotLuckNext,10));
  const weighted=rarityOrder.map(r=>({r,w:Number(box.odds[r]||0)*(r==='common'?1:mult)}));
  const total=weighted.reduce((a,x)=>a+x.w,0);let roll=Math.random()*total;
@@ -318,49 +406,26 @@ function slotHTML(item){
  if(item.special==='rainbow')return `<div class="slot special-rainbow"><b>RAINBOW</b><small>2× ITEM-WERT</small></div>`;
  return `<div class="slot rarity-${item.rarity}" data-rarity="${item.rarity}"><img src="${item.img}" alt=""><b>${item.name}</b><small>${fmt(item.value)} $</small></div>`
 }
-function makeSlots(boxIndex,count=82){
- const b=boxes[boxIndex],arr=[];
+function makeSlots(boxIndex,count=82,target=document.getElementById('items')){
+ const arr=[];
  for(let i=0;i<count;i++){const item=pickItem(boxIndex);if(item)arr.push(slotHTML(item));}
- document.getElementById('items').innerHTML=arr.join('')
+ target.innerHTML=arr.join('')
 }
+function unlockedReels(){return 1+(opened>=300?1:0)+(allUniqueWeapons().length>0&&foundWeapons.size>=allUniqueWeapons().length?1:0);}
+function renderReels(){const host=document.getElementById('reelContainer');if(!host)return;const count=unlockedReels();while(host.children.length<count){const clone=host.children[0].cloneNode(true);clone.removeAttribute('id');clone.querySelector('#track')?.removeAttribute('id');clone.querySelector('#items')?.removeAttribute('id');host.appendChild(clone);}while(host.children.length>count)host.removeChild(host.lastElementChild);host.querySelectorAll('.track').forEach((t,i)=>{t.dataset.reel=i;});}
+function getRollFinal(isPrimary){const luckProc=isPrimary&&Math.random()<.01;const rainbowProc=isPrimary&&!luckProc&&Math.random()<.005;const storedLuck=luckStacks,storedRainbow=rainbowNext;let final=luckProc?{special:'luck',name:'×2 Luck',rarity:'luck'}:rainbowProc?{special:'rainbow',name:'Rainbow',rarity:'rainbow'}:(()=>{luckStacks=storedLuck;const picked=pickItem(selected);luckStacks=0;if(isPrimary&&jackpotLuckNext>0)jackpotLuckNext--;return picked;})();if(final&&!final.special){if(storedRainbow)final={...final,value:final.value*2,enchanted:'Rainbow'};if(isPrimary)rainbowNext=false;}else{luckStacks=storedLuck;rainbowNext=storedRainbow;}return final;}
 function openBox(){
  if(rolling)return;
  const b=boxes[selected];
- if(money<b.price){
-   document.getElementById('result').innerHTML='<div class="big">Nicht genug Geld!</div><div class="muted">Verkaufe Items oder wähle eine günstigere Box.</div>';
-   return;
- }
- rolling=true;money-=b.price;update();
- const btn=document.getElementById('openBtn');btn.disabled=true;
- const track=document.getElementById('track'),items=document.getElementById('items');
- makeSlots(selected,76);
- const luckProc=Math.random()<0.01;
- const rainbowProc=!luckProc && Math.random()<0.005;
- const storedLuck=luckStacks,storedRainbow=rainbowNext;
- let final=luckProc?{special:'luck',name:'×2 Luck',rarity:'luck'}:rainbowProc?{special:'rainbow',name:'Rainbow',rarity:'rainbow'}:(()=>{luckStacks=storedLuck;const picked=pickItem(selected);luckStacks=0;if(jackpotLuckNext>0)jackpotLuckNext--;return picked;})();
- if(final && !final.special){if(storedRainbow)final={...final,value:final.value*2,enchanted:'Rainbow'};rainbowNext=false;}
- else {luckStacks=storedLuck;rainbowNext=storedRainbow;}
- if(!final){rolling=false;money+=b.price;update();btn.disabled=false;document.getElementById('result').innerHTML='<div class="big">Box-Datenfehler</div><div class="muted">Die Box konnte nicht geöffnet werden. Dein Geld wurde zurückerstattet.</div>';return;}
- const finalIndex=68;
- const node=items.children[finalIndex];
- node.outerHTML=slotHTML(final);
- items.style.transition='none';items.style.transform='translateX(0)';
- document.getElementById('result').innerHTML='<div class="big">🎰 Die Walze läuft...</div><div class="muted">Das Glück entscheidet.</div>';
- // Den Gewinner exakt unter die Mitte des Markierungsstrichs setzen.
- // Wir berechnen die echte Position des Slots statt mit einer festen Slotbreite
- // zu rechnen (wichtig, damit es auch auf kleineren Bildschirmen stimmt).
- const winnerSlot=items.children[finalIndex];
- const slotCenter=winnerSlot.offsetLeft + (winnerSlot.offsetWidth / 2);
- const trackCenter=track.clientWidth / 2;
- const finalOffset=trackCenter - slotCenter;
-
- // Keine Zufallsabweichung: Der Strich soll nach dem Stop immer exakt
- // durch die Mitte des gewonnenen Slots laufen.
- requestAnimationFrame(()=>requestAnimationFrame(()=>{
-   items.style.transition='transform 5.8s cubic-bezier(.08,.76,.12,1)';
-   items.style.transform=`translateX(${finalOffset}px)`;
- }));
- setTimeout(()=>finish(final,btn),6000);
+ if(money<b.price){document.getElementById('result').innerHTML='<div class="big">Nicht genug Geld!</div><div class="muted">Verkaufe Items oder wähle eine günstigere Box.</div>';return;}
+ rolling=true;money-=b.price;update();const btn=document.getElementById('openBtn');btn.disabled=true;renderReels();
+ const reels=[...document.querySelectorAll('#reelContainer .track')];const finals=[];
+ reels.forEach((track,i)=>{const items=track.querySelector('.items');makeSlots(selected,76,items);const generated=Array.from(items.children);const final=getRollFinal(i===0);finals.push(final);const finalIndex=68;const node=generated[finalIndex];if(node)node.outerHTML=slotHTML(final);items.style.transition='none';items.style.transform='translateX(0)';});
+ if(finals.some(x=>!x)){rolling=false;money+=b.price;update();btn.disabled=false;document.getElementById('result').innerHTML='<div class="big">Box-Datenfehler</div><div class="muted">Die Box konnte nicht geöffnet werden. Dein Geld wurde zurückerstattet.</div>';return;}
+ document.getElementById('result').innerHTML='<div class="big">🎰 Die Walzen laufen...</div><div class="muted">Alle freigeschalteten Walzen drehen sich gleichzeitig.</div>';
+ const duration=opened>=100?5.8/1.8:5.8;
+ reels.forEach(track=>{const items=track.querySelector('.items');const winner=items.children[68];const slotCenter=winner.offsetLeft+winner.offsetWidth/2;const offset=track.clientWidth/2-slotCenter;requestAnimationFrame(()=>requestAnimationFrame(()=>{items.style.transition=`transform ${duration}s cubic-bezier(.08,.76,.12,1)`;items.style.transform=`translateX(${offset}px)`;}));});
+ setTimeout(()=>finish(finals,btn),Math.round(duration*1000)+250);
 }
 function showRarityFx(rarity){
  if(rarity!=='legendary'&&rarity!=='mythic')return;
@@ -371,20 +436,17 @@ function showRarityFx(rarity){
  document.body.classList.add('flash-gold');
  setTimeout(()=>{fx.classList.remove('active','mythic');document.body.classList.remove('flash-gold')},1500);
 }
-function finish(item,btn){
- const winningSlot=document.querySelector('#items .slot.winner');
- if(winningSlot)winningSlot.classList.remove('winner');
- const slots=document.querySelectorAll('#items .slot');
- const winningIndex=68;
- if(slots[winningIndex])slots[winningIndex].classList.add('winner');
- opened++;jackpotProgress=Math.min(100,jackpotProgress+1);bumpQuest(0);bumpQuest(2);rolling=false;
- const result=document.getElementById('result');
- if(item.special==='luck'){luckStacks++;result.innerHTML=`<div class="big">✦ ×2 LUCK!</div><div class="value">Dein nächster Roll hat stärkere Chancen auf seltene Waffen.</div><div class="muted">Luck-Stacks: ${luckStacks} · Der Bonus stapelt sich.</div>`;}
- else if(item.special==='rainbow'){rainbowNext=true;result.innerHTML='<div class="big">🌈 RAINBOW ENCHANTMENT!</div><div class="value">Deine nächste Waffe ist verzaubert und doppelt so viel wert.</div>';}
- else {inventory.unshift(item);const key=itemKey(item);if(!foundWeapons.has(key)){foundWeapons.add(key);bumpQuest(1);checkCollectionRewards();}if(['legendary','mythic','eternal','void'].includes(item.rarity))highDrops++;if(!bestDrop||item.value>bestDrop.value)bestDrop={name:item.name,value:item.value,rarity:item.rarity};lastDrop=`${item.name} (${rarityNames[item.rarity]})`;result.innerHTML=`<img class="result-img" src="${item.img}" alt=""><div class="big">${item.name}</div><div>${item.enchanted?'🌈 '+item.enchanted+' · ':''}${rarityNames[item.rarity]}</div><div class="value">+${fmt(marketPrice(item))} $ Marktwert</div>`;if(item.enchanted)result.classList.add('rainbow-result');else result.classList.remove('rainbow-result');result.classList.remove(...rarityList.map(revealClass));result.classList.add(revealClass(item.rarity));showRarityFx(item.rarity);}
+function finishOriginalBase(items,btn){
+ const result=document.getElementById('result');const normal=[];
+ document.querySelectorAll('#reelContainer .items').forEach(el=>{el.querySelectorAll('.slot.winner').forEach(x=>x.classList.remove('winner'));if(el.children[68])el.children[68].classList.add('winner');});
+ opened++;jackpotProgress=Math.min(100,jackpotProgress+1);bumpQuest(0);bumpQuest(2);
+ items.forEach((item,index)=>{if(item.special==='luck'){luckStacks++;}else if(item.special==='rainbow'){rainbowNext=true;}else if(item){normal.push(item);inventory.unshift(item);const key=itemKey(item);if(!foundWeapons.has(key)){foundWeapons.add(key);bumpQuest(1);}if(['legendary','mythic','eternal','void'].includes(item.rarity))highDrops++;if(!bestDrop||item.value>bestDrop.value)bestDrop={name:item.name,value:item.value,rarity:item.rarity};lastDrop=`${item.name} (${rarityNames[item.rarity]})`; }});
+ checkCollectionRewards();
+ if(normal.length){const first=normal[0];result.innerHTML=`<div class="big">${normal.length>1?'🎰 Mehrfach-Drop!':first.name}</div>${normal.map(x=>`<div style="display:flex;align-items:center;gap:8px;margin:5px 0"><img src="${x.img}" style="width:54px;height:42px;object-fit:contain"><span>${x.name} · ${rarityNames[x.rarity]} · ${fmt(marketPrice(x))} $</span></div>`).join('')}<div class="value">${normal.length} Waffe(n) erhalten</div>`;result.classList.remove(...rarityList.map(revealClass));result.classList.add(revealClass(first.rarity));showRarityFx(first.rarity);result.classList.toggle('rainbow-result',normal.some(x=>x.enchanted));}
+ else if(items.some(x=>x.special==='luck'))result.innerHTML=`<div class="big">✦ ×2 LUCK!</div><div class="value">Dein nächster Roll hat stärkere Chancen auf seltene Waffen.</div><div class="muted">Luck-Stacks: ${luckStacks}</div>`;
+ else result.innerHTML='<div class="big">🌈 RAINBOW ENCHANTMENT!</div><div class="value">Deine nächste Waffe ist verzaubert und doppelt so viel wert.</div>';
  if(jackpotProgress>=100){jackpotProgress=100;document.getElementById('claimJackpot').disabled=false;document.getElementById('jackpotMessage').textContent='Jackpot bereit! Hol dir deinen Bonus.';}
- result.classList.add('flash-gold');setTimeout(()=>result.classList.remove('flash-gold'),800);
- btn.disabled=false;renderInventory();update();
+ rolling=false;result.classList.add('flash-gold');setTimeout(()=>result.classList.remove('flash-gold'),800);btn.disabled=false;renderInventory();renderReels();update();
 }
 function renderInventory(){
  const el=document.getElementById('inventory');
@@ -422,7 +484,7 @@ function claimBailout(){
  document.getElementById('result').innerHTML='<div class="big">✦ 50 $ Bonus erhalten!</div><div class="muted">Dein Glück kann weitergehen.</div>';
  update();
 }
-function update(){const mm=document.getElementById('marketMultiplierValue');if(mm)mm.textContent=marketMultiplier().toFixed(2).replace('.',',')+'×';
+function update(){renderMarket();renderReels();
  document.getElementById('money').textContent=fmt(money);
  document.getElementById('opened').textContent=opened;
  document.getElementById('invValue').textContent=fmt(inventory.reduce((a,x)=>a+marketPrice(x),0))+' $';
@@ -437,15 +499,166 @@ function allUniqueWeapons(){const all=[];for(const r of rarityList){for(const po
 function checkCollectionRewards(){const all=allUniqueWeapons();const found=all.filter(x=>foundWeapons.has(itemKey(x))).length;const pct=all.length?found/all.length:0;const rewards=[{key:'25',at:.25,cash:2500,label:'25% der Sammlung'},{key:'50',at:.5,cash:15000,label:'50% der Sammlung'},{key:'100',at:1,cash:100000,label:'vollständige Sammlung'}];for(const r of rewards){if(pct>=r.at&&!collectionRewards.includes(r.key)){collectionRewards.push(r.key);money+=r.cash;document.getElementById('result').innerHTML=`<div class="big">📚 Sammlungsbonus!</div><div>${r.label} entdeckt</div><div class="value">+${fmt(r.cash)} $</div>`;}}}
 function renderCollection(){const unique=allUniqueWeapons().filter(x=>x&&x.name);const found=unique.filter(x=>foundWeapons.has(itemKey(x))).length;const pct=unique.length?found/unique.length*100:0;document.getElementById('collectionSummary').textContent=`${found} / ${unique.length} Waffen entdeckt · Sammelboni: ${found>=Math.ceil(unique.length*.25)?'25% ✓':'25% bei '+Math.ceil(unique.length*.25)} · ${found>=Math.ceil(unique.length*.5)?'50% ✓':'50% bei '+Math.ceil(unique.length*.5)} · Komplett: ${found===unique.length?'✓':'noch offen'} · Boni erhalten: ${collectionRewards.length}/3`;document.getElementById('collectionProgress').style.width=pct+'%';document.getElementById('collectionGrid').innerHTML=unique.map(x=>{const yes=foundWeapons.has(itemKey(x));return `<div class="collection-item ${yes?'found':''}">${yes?`<img src="${x.img}" alt="">`:'<div style="height:48px;display:grid;place-items:center;font-size:24px">🔒</div>'}<b>${yes?x.name:'Unentdeckt'}</b><div>${rarityNames[x.rarity]||x.rarity}</div></div>`}).join('');}
 function renderQuests(){ensureDailyQuests();document.getElementById('questDate').textContent='Täglicher Reset · '+questState.day;document.getElementById('questList').innerHTML=questDefs().map((q,i)=>{const done=q.progress>=q.goal,claimed=questState.claimed[i];return `<div class="quest"><b>${q.name} · ${q.reward.toLocaleString('de-DE')} $</b>${q.desc}<div class="progress"><span style="width:${Math.min(100,q.progress/q.goal*100)}%"></span></div><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">${q.progress}/${q.goal}</span><button class="btn claim-btn" ${(!done||claimed||rolling)?'disabled':''} onclick="claimQuest(${i})">${claimed?'ERHALTEN':done?'ABHOLEN':'IN ARBEIT'}</button></div></div>`}).join('');}
-function claimQuest(i){ensureDailyQuests();const q=questDefs()[i];if(!q||q.progress<q.goal||questState.claimed[i]||rolling)return;questState.claimed[i]=true;money+=q.reward;document.getElementById('result').innerHTML=`<div class="big">Quest abgeschlossen!</div><div class="value">+${fmt(q.reward)} $</div>`;update();renderQuests();}
+function claimQuest(i){ensureDailyQuests();const q=questDefs()[i];if(!q||q.progress<q.goal||questState.claimed[i]||rolling)return;questState.claimed[i]=true;money+=q.reward;addXp(50);document.getElementById('result').innerHTML=`<div class="big">Quest abgeschlossen!</div><div class="value">+${fmt(q.reward)} $</div>`;update();renderQuests();}
 function claimJackpot(){if(jackpotProgress<100||rolling)return;jackpotClaims++;jackpotProgress=0;jackpotLuckNext++;document.getElementById('jackpotMessage').textContent='Jackpot abgeholt! Dein nächster Waffen-Roll ist 4× luckier.';update();}
-function renderProgressPanels(){renderCollection();renderQuests();document.getElementById('highDrops').textContent=highDrops;document.getElementById('bestDrop').innerHTML=bestDrop?`${bestDrop.name} <small style="display:block;text-align:right;font-size:10px;color:var(--muted);font-weight:500">${fmt(bestDrop.value)} $</small>`:'—';document.getElementById('soldTotal').textContent=fmt(soldTotal)+' $';document.getElementById('luckRecord').textContent=`Letzter Drop: ${lastDrop} · Jackpot-Boni abgeholt: ${jackpotClaims}`;document.getElementById('jackpotProgress').style.width=(jackpotProgress/100*100)+'%';document.getElementById('jackpotCount').textContent=`${jackpotProgress}/100`;document.getElementById('claimJackpot').disabled=jackpotProgress<100||rolling;document.getElementById('jackpotMessage').textContent=jackpotLuckNext?`Jackpot-Bonus bereit: ${jackpotLuckNext}× 4×-Luck-Roll(s) verfügbar!`:jackpotProgress>=100?'Jackpot bereit — du kannst ihn jederzeit abholen.':'Bei 100 Öffnungen kannst du deinen Jackpot abholen.';}
+function renderAchievements(){const total=allUniqueWeapons().length;const complete=total>0&&foundWeapons.size>=total;const rows=[{name:'Tempo-Meister',desc:'100 All-Time Rolls: 1,8× schnellere Walzen',ok:opened>=100,progress:Math.min(100,opened/100*100),status:`${Math.min(opened,100)}/100`},{name:'Doppel-Walze',desc:'300 All-Time Rolls: zweite Walze wird freigeschaltet',ok:opened>=300,progress:Math.min(100,opened/300*100),status:`${Math.min(opened,300)}/300`},{name:'Vollständige Sammlung',desc:'Entdecke jede Waffe: dritte Walze wird freigeschaltet',ok:complete,progress:total?Math.min(100,foundWeapons.size/total*100):0,status:`${Math.min(foundWeapons.size,total)} / ${total}`}];const el=document.getElementById('achievementList');if(el)el.innerHTML=rows.map(a=>`<div class="achievement"><b>${a.ok?'✓':'🔒'} ${a.name}</b><div class="muted">${a.desc}</div><div class="progress"><span style="width:${a.progress}%"></span></div><small>${a.status} · ${a.ok?'Freigeschaltet':'Noch nicht erreicht'}</small></div>`).join('');const summary=document.getElementById('achievementSummary');if(summary)summary.textContent=`${unlockedReels()} / 3 Walzen aktiv · ${opened>=100?'1,8× Speed aktiv':'Speed ab 100 Rolls'} · All-Time Rolls: ${opened}`;}
+function renderProgressPanelsOriginalBase(){renderCollection();renderQuests();renderAchievements();document.getElementById('highDrops').textContent=highDrops;document.getElementById('bestDrop').innerHTML=bestDrop?`${bestDrop.name} <small style="display:block;text-align:right;font-size:10px;color:var(--muted);font-weight:500">${fmt(bestDrop.value)} $</small>`:'—';document.getElementById('soldTotal').textContent=fmt(soldTotal)+' $';document.getElementById('luckRecord').textContent=`Letzter Drop: ${lastDrop} · Jackpot-Boni abgeholt: ${jackpotClaims}`;document.getElementById('jackpotProgress').style.width=(jackpotProgress/100*100)+'%';document.getElementById('jackpotCount').textContent=`${jackpotProgress}/100`;document.getElementById('claimJackpot').disabled=jackpotProgress<100||rolling;document.getElementById('jackpotMessage').textContent=jackpotLuckNext?`Jackpot-Bonus bereit: ${jackpotLuckNext}× 4×-Luck-Roll(s) verfügbar!`:jackpotProgress>=100?'Jackpot bereit — du kannst ihn jederzeit abholen.':'Bei 100 Öffnungen kannst du deinen Jackpot abholen.';}
+
+
+/* Long-term systems are additive: original boxes, drops, inventory and visual layout stay intact. */
+const originalFinish=finishOriginalBase;
+const originalPickRarity=pickRarityOriginalBase;
+const originalMarketPrice=marketPriceOriginalBase;
+const eventCatalog=[
+ {id:'lucky',name:'Lucky Hour',desc:'Epic- und höhere Seltenheiten erhalten erhöhte Drop-Gewichtung.',bonus:'Epic+ ×1,35'},
+ {id:'rift',name:'Eternal Rift',desc:'Die Chance auf Eternal- und Void-Waffen ist vorübergehend erhöht.',bonus:'Eternal/Void ×2'},
+ {id:'forge',name:'Forge Rush',desc:'Jeder Waffen-Drop bringt zusätzlichen Schmiedestaub.',bonus:'+2 Schmiedestaub pro Drop'},
+ {id:'xp',name:'XP Overdrive',desc:'Alle Rolls bringen doppelte Erfahrungspunkte.',bonus:'2× XP'}
+];
+function currentEvent(){const slot=Math.floor(Date.now()/1800000);return eventCatalog[((slot%eventCatalog.length)+eventCatalog.length)%eventCatalog.length];}
+function eventTimeLeft(){return 1800000-(Date.now()%1800000);}
+function xpNeeded(level){return 100+Math.max(0,level-1)*85;}
+function addXp(amount){
+ let gain=Math.max(0,Math.floor(amount));if(currentEvent().id==='xp')gain*=2;
+ totalXp+=gain;playerXp+=gain;let levels=0;
+ while(playerXp>=xpNeeded(playerLevel)){playerXp-=xpNeeded(playerLevel);playerLevel++;levels++;}
+ if(levels){const cash=levels*250+Math.max(0,playerLevel-1)*50;money+=cash;if(playerLevel%5===0)forgeDust+=15+playerLevel;document.getElementById('result').innerHTML=`<div class="big">⭐ Levelaufstieg!</div><div class="value">Level ${playerLevel} erreicht · +${fmt(cash)} $${playerLevel%5===0?' · Bonus-Schmiedestaub!':''}</div>`;}
+}
+function rarityXp(r){return ({common:5,uncommon:8,rare:12,epic:18,legendary:30,mythic:50,eternal:100,void:150})[r]||0;}
+function rarityShard(r){return ({common:1,uncommon:2,rare:4,epic:7,legendary:12,mythic:20,eternal:35,void:50})[r]||1;}
+function weaponUpgradeLevel(item){return Math.max(0,Math.min(5,Number(weaponUpgrades[itemKey(item)])||0));}
+function marketPrice(item){const level=weaponUpgradeLevel(item);const prestigeBoost=1+Math.min(10,prestige)*.05;return Math.max(1,Math.round(originalMarketPrice(item)*(1+level*.12)*prestigeBoost));}
+function pickRarity(box){
+ const ev=currentEvent();if(ev.id==='lucky'||ev.id==='rift'){
+  const odds={...box.odds};if(ev.id==='lucky'){for(const r of ['epic','legendary','mythic','eternal','void'])odds[r]=(odds[r]||0)*1.35;}
+  if(ev.id==='rift'){odds.eternal=(odds.eternal||0)*2;odds.void=(odds.void||0)*2;}
+  return originalPickRarity({...box,odds});
+ }
+ return originalPickRarity(box);
+}
+function unlockSecret(id){
+ if(secretUnlocked.includes(id))return;
+ secretUnlocked.push(id);
+ const rewards={777:{dust:77,cash:7777},void:{dust:100,cash:25000},eternal:{dust:60,cash:12000},allrarities:{dust:120,cash:30000},fullcollection:{dust:250,cash:100000},tenk:{dust:500,cash:100000}};
+ const reward=rewards[id]||{dust:25,cash:2500};forgeDust+=reward.dust;money+=reward.cash;
+ const labels={777:'Die Glückszahl',void:'Jenseits der Leere',eternal:'Ewige Entdeckung',allrarities:'Regenbogen-Sammler',fullcollection:'Unendlicher Sammler',tenk:'Zehntausend Rolls'};
+ document.getElementById('result').innerHTML=`<div class="big">🔐 Geheimes Achievement!</div><div>${labels[id]||'Geheimer Erfolg'}</div><div class="value">+${fmt(reward.cash)} $ · +${reward.dust} Schmiedestaub</div>`;
+}
+function finish(items,btn){
+ const knownBefore=new Set(foundWeapons);
+ const dropped=items.filter(x=>x&&!x.special);
+ const duplicates=dropped.filter(x=>knownBefore.has(itemKey(x)));
+ originalFinish(items,btn);
+ let xpGain=20;
+ dropped.forEach(x=>{xpGain+=rarityXp(x.rarity);if(knownBefore.has(itemKey(x)))forgeDust+=rarityShard(x.rarity);if(currentEvent().id==='forge')forgeDust+=2;});
+ if(dropped.length===0)xpGain=20;
+ addXp(xpGain);
+ const primary=dropped[0];
+ if(primary){if(primary.rarity===lastRarityDrop)rarityRun++;else{lastRarityDrop=primary.rarity;rarityRun=1;}}
+ if(opened===777||opened===7777)unlockSecret("777");
+ if(dropped.some(x=>x.rarity==='eternal')&&!secretUnlocked.includes('eternal'))unlockSecret('eternal');
+ if(dropped.some(x=>x.rarity==='void')&&!secretUnlocked.includes('void'))unlockSecret('void');
+ if(rarityList.every(r=>foundWeapons.size>0&&allUniqueWeapons().some(x=>x.rarity===r&&foundWeapons.has(itemKey(x)))))unlockSecret('allrarities');
+ if(foundWeapons.size>=allUniqueWeapons().length&&allUniqueWeapons().length>0)unlockSecret('fullcollection');
+ if(opened>=10000)unlockSecret('tenk');
+ update();
+ const inspectable=dropped.find(x=>x.rarity==='void')||dropped.find(x=>x.rarity==='eternal');
+ if(inspectable)setTimeout(()=>showWeaponInspect(inspectable),550);
+}
+function renderInventory(){
+ const el=document.getElementById('inventory');
+ if(!inventory.length){el.innerHTML='<div class="muted">Noch keine Items.</div>';return;}
+ el.innerHTML=inventory.map((x,i)=>`<div class="inv-item rarity-${x.rarity}">
+ <img src="${x.img}" alt=""><b style="font-size:11px">${x.name}</b><div class="muted">${fmt(marketPrice(x))} $</div>
+ <div class="inventory-actions">${(x.rarity==='eternal'||x.rarity==='void')?`<button class="sell" onclick="inspectInventoryWeapon(${i})">INSPECT</button>`:''}<button class="sell" onclick="sellItem(${i})">Verkaufen</button></div></div>`).join('');
+}
+function renderCollection(){
+ const unique=allUniqueWeapons().filter(x=>x&&x.name);const found=unique.filter(x=>foundWeapons.has(itemKey(x))).length;const pct=unique.length?found/unique.length*100:0;
+ document.getElementById('collectionSummary').textContent=`${found} / ${unique.length} Waffen entdeckt · Sammelboni: ${found>=Math.ceil(unique.length*.25)?'25% ✓':'25% bei '+Math.ceil(unique.length*.25)} · ${found>=Math.ceil(unique.length*.5)?'50% ✓':'50% bei '+Math.ceil(unique.length*.5)} · Komplett: ${found===unique.length?'✓':'noch offen'} · Boni erhalten: ${collectionRewards.length}/3`;
+ document.getElementById('collectionProgress').style.width=pct+'%';
+ document.getElementById('collectionGrid').innerHTML=unique.map((x,i)=>{const yes=foundWeapons.has(itemKey(x));const lvl=weaponUpgradeLevel(x);return `<div class="collection-item ${yes?'found':''}">${yes?`<img src="${x.img}" alt="">`:'<div style="height:48px;display:grid;place-items:center;font-size:24px">🔒</div>'}<b>${yes?x.name:'Unentdeckt'}</b><div>${rarityNames[x.rarity]||x.rarity}</div>${yes?`<small>Upgrade ${lvl}/5</small>${x.rarity==='eternal'||x.rarity==='void'?`<button class="sell" onclick="inspectCollectionWeapon(${i})">3D ansehen</button>`:''}`:''}</div>`}).join('');
+}
+function upgradeCost(item){const idx=rarityList.indexOf(item.rarity);const next=weaponUpgradeLevel(item)+1;return 12+Math.max(0,idx)*9+next*18;}
+function upgradeWeapon(index){
+ const item=allUniqueWeapons()[index];if(!item||!foundWeapons.has(itemKey(item)))return;
+ const level=weaponUpgradeLevel(item);if(level>=5){return;}
+ const cost=upgradeCost(item);if(forgeDust<cost){document.getElementById('result').innerHTML=`<div class="big">Nicht genug Schmiedestaub</div><div class="muted">Benötigt: ${cost} · Vorhanden: ${forgeDust}</div>`;return;}
+ forgeDust-=cost;weaponUpgrades[itemKey(item)]=level+1;document.getElementById('result').innerHTML=`<div class="big">⚒️ Waffe verbessert!</div><div class="value">${item.name} · Level ${level+1}/5 · +${12}% Marktwert pro Upgrade-Stufe</div>`;update();
+}
+function renderForge(){
+ const found=allUniqueWeapons().filter(x=>foundWeapons.has(itemKey(x)));
+ document.getElementById('forgeDust').textContent=fmt(forgeDust);document.getElementById('prestigeTokens').textContent=prestigeTokens;
+ document.getElementById('forgeList').innerHTML=found.length?found.map(x=>{const level=weaponUpgradeLevel(x),cost=upgradeCost(x);const idx=allUniqueWeapons().indexOf(x);return `<div class="forge-card"><img src="${x.img}" alt=""><b>${x.name}</b><span>${rarityNames[x.rarity]} · Stufe ${level}/5</span><div class="progress"><span style="width:${level*20}%"></span></div><small>Wertbonus: +${level*12}%</small><button class="sell" onclick="upgradeWeapon(${idx})" ${level>=5||forgeDust<cost?'disabled':''}>${level>=5?'MAX LEVEL':'AUFWERTEN · '+cost+' ✦'}</button></div>`}).join(''):'<div class="muted">Entdecke Waffen, um sie hier aufzuwerten.</div>';
+}
+function renderSecrets(){
+ const defs=[['777','Die Glückszahl','Erreiche exakt 777 All-Time Rolls.'],['eternal','Ewige Entdeckung','Finde deine erste Eternal-Waffe.'],['void','Jenseits der Leere','Finde deine erste Void-Waffe.'],['allrarities','Regenbogen-Sammler','Entdecke mindestens eine Waffe jeder Seltenheit.'],['fullcollection','Unendlicher Sammler','Vervollständige die gesamte Waffensammlung.'],['tenk','Zehntausend Rolls','Erreiche 10.000 All-Time Rolls.']];
+ document.getElementById('secretAchievements').innerHTML=defs.map(([id,name,desc])=>secretUnlocked.includes(id)?`<div class="secret-row">✓ <b>${name}</b><div>${desc}</div></div>`:`<div class="secret-row locked">🔒 <b>Geheimer Erfolg</b><div>??? · Noch nicht entdeckt</div></div>`).join('');
+}
+function renderLongTerm(){
+ document.getElementById('playerLevel').textContent='Level '+playerLevel;document.getElementById('totalXp').textContent=fmt(totalXp)+' XP';
+ document.getElementById('xpProgress').style.width=Math.min(100,playerXp/xpNeeded(playerLevel)*100)+'%';
+ document.getElementById('xpLabel').textContent=`${fmt(playerXp)} / ${fmt(xpNeeded(playerLevel))} XP bis Level ${playerLevel+1}`;
+ document.getElementById('levelRewardText').textContent='Jeder Roll gibt XP; Seltenheiten geben Bonus-XP. Alle 5 Level gibt es zusätzlich Schmiedestaub.';
+ const ev=currentEvent();document.getElementById('eventName').textContent=ev.name;document.getElementById('eventDesc').textContent=ev.desc+' Bonus: '+ev.bonus;
+ const left=eventTimeLeft();document.getElementById('eventTimer').textContent=`${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`;
+ document.getElementById('eventHistory').textContent='Das nächste Event startet automatisch beim Wechsel des 30-Minuten-Zyklus.';
+ const reqLevel=50+prestige*10,reqRolls=5000+prestige*2500;const ready=playerLevel>=reqLevel&&opened>=reqRolls;
+ document.getElementById('prestigeLevel').textContent=prestige;document.getElementById('prestigeBonus').textContent='+'+Math.min(50,prestige*5)+'%';
+ document.getElementById('prestigeDesc').textContent=`Nächste Freischaltung: Level ${reqLevel} und ${fmt(reqRolls)} All-Time Rolls. Prestige setzt Geld und Inventar zurück, bewahrt Sammlung, Level und Upgrades und erhöht deinen dauerhaften Verkaufsbonus.`;
+ const btn=document.getElementById('prestigeBtn');btn.disabled=!ready||rolling;btn.textContent=ready?'PRESTIGE AKTIVIEREN':`LEVEL ${reqLevel} · ${fmt(reqRolls)} ROLLS`;
+ renderForge();renderSecrets();
+}
+let lastEventSlot=Math.floor(Date.now()/1800000);
+function updateEventClock(){
+ const slot=Math.floor(Date.now()/1800000);
+ if(slot!==lastEventSlot){lastEventSlot=slot;renderLongTerm();return;}
+ const left=eventTimeLeft();const timer=document.getElementById('eventTimer');
+ if(timer)timer.textContent=`${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`;
+}
+function doPrestige(){
+ const reqLevel=50+prestige*10,reqRolls=5000+prestige*2500;if(rolling||playerLevel<reqLevel||opened<reqRolls)return;
+ if(!confirm('Prestige aktivieren? Dein Geld und dein Inventar werden zurückgesetzt. Sammlung, Level und Waffen-Upgrades bleiben erhalten.'))return;
+ prestige++;prestigeTokens++;money=150;inventory=[];jackpotProgress=0;luckStacks=0;rainbowNext=false;
+ document.getElementById('result').innerHTML=`<div class="big">♛ PRESTIGE ${prestige}!</div><div class="value">+5% permanenter Verkaufsbonus · +1 Prestige-Münze</div>`;
+ update();
+}
+function showWeaponInspect(item){
+ if(!item||!['eternal','void'].includes(item.rarity))return;
+ const panel=document.getElementById('inspectPanel'),overlay=document.getElementById('inspectOverlay'),model=document.getElementById('inspectModel');
+ panel.classList.toggle('eternal',item.rarity==='eternal');panel.classList.toggle('void',item.rarity==='void');
+ document.getElementById('inspectName').textContent=item.name;document.getElementById('inspectRarity').textContent=rarityNames[item.rarity].toUpperCase();
+ document.getElementById('inspectValue').textContent=`Marktwert: ${fmt(marketPrice(item))} $`;
+ document.getElementById('inspectLevel').textContent=`Upgrade: Level ${weaponUpgradeLevel(item)}/5`;
+ document.getElementById('inspectType').textContent=item.rarity==='eternal'?'Eternal · blaue Partikel':'Void · lilafarbene Partikel';
+ const particles=document.getElementById('inspectParticles');particles.innerHTML=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;top:${(i*61)%100}%;animation-delay:${(i%9)*-.37}s;animation-duration:${2.4+(i%7)*.3}s"></i>`).join('');
+ model.style.setProperty('--weapon-image',`url(\"${item.img}\")`);model.style.transform='rotateX(-12deg) rotateY(-25deg) scale(1)';
+ overlay.classList.add('active');overlay.setAttribute('aria-hidden','false');
+}
+function inspectInventoryWeapon(index){showWeaponInspect(inventory[index]);}
+function inspectCollectionWeapon(index){showWeaponInspect(allUniqueWeapons()[index]);}
+function closeWeaponInspect(){const overlay=document.getElementById('inspectOverlay');overlay.classList.remove('active');overlay.setAttribute('aria-hidden','true');}
+function bindInspectControls(){
+ const stage=document.getElementById('inspectStage'),model=document.getElementById('inspectModel');let dragging=false,lastX=0,lastY=0,rx=-12,ry=-25,scale=1;
+ stage.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;stage.setPointerCapture(e.pointerId);});
+ stage.addEventListener('pointermove',e=>{if(!dragging)return;ry+=(e.clientX-lastX)*.7;rx=Math.max(-70,Math.min(70,rx-(e.clientY-lastY)*.7));lastX=e.clientX;lastY=e.clientY;model.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) scale(${scale})`;});
+ stage.addEventListener('pointerup',()=>dragging=false);stage.addEventListener('pointercancel',()=>dragging=false);
+ stage.addEventListener('wheel',e=>{e.preventDefault();scale=Math.max(.7,Math.min(1.45,scale+(e.deltaY<0?.08:-.08)));model.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) scale(${scale})`;},{passive:false});
+ document.getElementById('inspectClose').addEventListener('click',closeWeaponInspect);
+ document.getElementById('inspectOverlay').addEventListener('click',e=>{if(e.target.id==='inspectOverlay')closeWeaponInspect();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWeaponInspect();});
+}
+function renderProgressPanels(){
+ renderProgressPanelsOriginalBase();
+ renderLongTerm();
+}
+
 
 document.getElementById('claimJackpot').addEventListener('click',claimJackpot);
 document.getElementById('openBtn').addEventListener('click',openBox);
 document.getElementById('bailoutBtn').addEventListener('click',claimBailout);
 document.getElementById('sellAllBtn').addEventListener('click',sellAll);
-ensureDailyQuests();renderCases();renderOdds();renderInventory();update();renderProgressPanels();
+document.getElementById('prestigeBtn').addEventListener('click',doPrestige);bindInspectControls();
+ensureDailyQuests();ensureMarket();renderCases();renderOdds();renderInventory();update();renderProgressPanels();setInterval(()=>{renderMarket();updateEventClock();saveGame();},1000);
 </script>
 </body>
 </html>
