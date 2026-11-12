@@ -666,25 +666,36 @@ document.getElementById('claimJackpot').addEventListener('click',claimJackpot);
 document.getElementById('openBtn').addEventListener('click',openBox);
 document.getElementById('bailoutBtn').addEventListener('click',claimBailout);
 document.getElementById('sellAllBtn').addEventListener('click',sellAll);
-document.getElementById('autoRollBtn').addEventListener('click',()=>{
- const btn=document.getElementById('autoRollBtn');
+const autoRollButton=document.getElementById('autoRollBtn');
+function refreshAutoRollButton(){
+ if(autoRollButton) autoRollButton.textContent=autoRollUnlocked?(autoRollEnabled?'AUTO-ROLL · AN':'AUTO-ROLL · AUS'):'AUTO-ROLL · 100.000.000 $';
+}
+autoRollButton.addEventListener('click',()=>{
  if(!autoRollUnlocked){
-  if(money<100000000){document.getElementById('result').innerHTML='<div class="big">Nicht genug Geld</div><div class="muted">Auto-Roll kostet einmalig 100.000.000 $.</div>';return;}
-  money-=100000000;autoRollUnlocked=true;autoRollEnabled=true;
- }else autoRollEnabled=!autoRollEnabled;
- update();btn.textContent=autoRollEnabled?'AUTO-ROLL · AN':'AUTO-ROLL · AUS';
+  if(money<100000000){
+   document.getElementById('result').innerHTML='<div class="big">Nicht genug Geld</div><div class="muted">Auto-Roll kostet einmalig 100.000.000 $.</div>';
+   return;
+  }
+  money-=100000000;
+  autoRollUnlocked=true;
+  autoRollEnabled=true;
+ }else{
+  autoRollEnabled=!autoRollEnabled;
+ }
+ refreshAutoRollButton();
+ update();
 });
-setInterval(()=>{if(autoRollEnabled&&!rolling){if(money>=boxes[selected].price)openBox();else{autoRollEnabled=false;const b=document.getElementById('autoRollBtn');if(b)b.textContent='AUTO-ROLL · AUS';}}},600);
-
-document.getElementById('autoRollBtn').addEventListener('click',()=>{
- const btn=document.getElementById('autoRollBtn');
- if(!autoRollUnlocked){
-  if(money<100000000){document.getElementById('result').innerHTML='<div class="big">Nicht genug Geld</div><div class="muted">Auto-Roll kostet einmalig 100.000.000 $.</div>';return;}
-  money-=100000000;autoRollUnlocked=true;autoRollEnabled=true;
- }else autoRollEnabled=!autoRollEnabled;
- update();btn.textContent=autoRollEnabled?'AUTO-ROLL · AN':'AUTO-ROLL · AUS';
-});
-setInterval(()=>{if(autoRollEnabled&&!rolling){if(money>=boxes[selected].price)openBox();else{autoRollEnabled=false;const b=document.getElementById('autoRollBtn');if(b)b.textContent='AUTO-ROLL · AUS';}}},600);
+setInterval(()=>{
+ if(!autoRollEnabled||rolling)return;
+ if(money>=boxes[selected].price){
+  openBox();
+ }else{
+  autoRollEnabled=false;
+  refreshAutoRollButton();
+  saveGame();
+ }
+},600);
+refreshAutoRollButton();
 
 bindInspectControls();
 ensureDailyQuests();ensureMarket();renderCases();renderOdds();renderInventory();update();renderProgressPanels();setInterval(()=>{renderMarket();updateEventClock();saveGame();},1000);
