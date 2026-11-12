@@ -267,7 +267,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
         <div class="case-row" id="cases"></div>
         <div class="opening">
           <div id="reelContainer" class="reel-container"><div class="track" id="track"><div class="pointer"></div><div class="items" id="items"></div></div></div>
-          <div class="controls"><button class="btn" id="openBtn">BOX ÖFFNEN</button><div id="luckMultiplierDisplay" class="luck-multiplier" hidden>LUCK ×2</div></div>
+          <div class="controls"><button class="btn" id="openBtn">BOX ÖFFNEN</button><button class="btn" id="autoRollBtn" type="button">AUTO-ROLL · 100.000.000 $</button><div id="luckMultiplierDisplay" class="luck-multiplier" hidden>LUCK ×2</div></div>
           <div class="result" id="result"><div class="muted">Bereit? Die Walze entscheidet. Viel Glück.</div></div>
         </div>
       </div>
@@ -299,9 +299,8 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:ins
     <section class="feature-card"><h2>📊 Luck-Tracker</h2><div class="stats"><div class="stat"><span class="muted">Legendär+</span><b id="highDrops">0</b></div><div class="stat"><span class="muted">Bester Drop</span><b id="bestDrop">—</b></div><div class="stat"><span class="muted">Verkaufserlös</span><b id="soldTotal">0 $</b></div></div><p id="luckRecord">Deine Drop-Historie wird hier gesammelt.</p></section>
     <section class="feature-card"><h2>⭐ Level & Erfahrung</h2><div class="system-grid"><div class="system-stat">Spieler-Level<b id="playerLevel">Level 1</b></div><div class="system-stat">Gesamt-XP<b id="totalXp">0 XP</b></div></div><div class="xp-track"><span id="xpProgress" style="width:0%"></span></div><p id="xpLabel">0 / 100 XP bis zum nächsten Level</p><p id="levelRewardText">Jeder Roll gibt Erfahrung. Levelaufstiege bringen Geld und gelegentlich Schmiedestaub.</p></section>
     <section class="feature-card"><h2>🔥 Zeitlich wechselndes Event</h2><div class="event-banner"><div><div class="event-tag">AKTIVES EVENT</div><b id="eventName">Wird geladen …</b><p id="eventDesc">Wechselnde Boni für deine Rolls.</p></div><b id="eventTimer">30:00</b></div><p id="eventHistory" class="muted">Events wechseln automatisch und benötigen keine tägliche Anmeldung.</p></section>
-    <section class="feature-card full"><h2>⚒️ Waffen-Schmiede</h2><p>Jeder neue Drop bleibt im Inventar. Doppelte Waffen liefern zusätzlich Schmiedestaub. Verwende ihn, um entdeckte Waffen bis Level 5 aufzuwerten und ihren Marktwert dauerhaft zu steigern.</p><div class="system-grid"><div class="system-stat">Schmiedestaub<b id="forgeDust">0</b></div><div class="system-stat">Prestige-Münzen<b id="prestigeTokens">0</b></div></div><div class="forge-list" id="forgeList"></div></section>
+    <section class="feature-card full"><h2>⚒️ Waffen-Schmiede</h2><p>Jeder neue Drop bleibt im Inventar. Jeder gezogene Drop liefert Schmiedestaub – je nach Seltenheit. Häufig gezogene Waffen liefern mit jeder weiteren Kopie zusätzlichen Staub. Upgrades erhöhen den Verkaufswert dauerhaft.</p><div class="system-grid"><div class="system-stat">Schmiedestaub<b id="forgeDust">0</b></div><div class="system-stat">Gezogene Waffen<b id="pullCountTotal">0</b></div></div><div class="forge-list" id="forgeList"></div></section>
     <section class="feature-card"><h2>🏅 Verborgene Achievements</h2><p>Einige Erfolge bleiben geheim, bis du ihre Bedingungen erfüllst.</p><div id="secretAchievements"></div></section>
-    <section class="feature-card"><h2>♛ Prestige</h2><p id="prestigeDesc">Erreiche hohe Level und viele All-Time Rolls, um Prestige freizuschalten.</p><div class="system-grid"><div class="system-stat">Prestige<b id="prestigeLevel">0</b></div><div class="system-stat">Permanenter Verkaufsbonus<b id="prestigeBonus">+0%</b></div></div><div class="system-actions"><button class="btn" id="prestigeBtn" disabled>PRESTIGE NOCH GESPERRT</button></div></section>
   </div>
 </div>
 
@@ -339,11 +338,11 @@ let foundWeapons=new Set(), collectionRewards=[], questState={}, jackpotProgress
 
 let marketTick=0;
 let playerLevel=1,playerXp=0,totalXp=0,forgeDust=0,prestige=0,prestigeTokens=0;
-let weaponUpgrades={},secretUnlocked=[],lastRarityDrop='',rarityRun=0;
+let weaponUpgrades={},secretUnlocked=[],lastRarityDrop='',rarityRun=0,weaponPullCounts={},autoRollUnlocked=false,autoRollEnabled=false;
 const LONG_SAVE_DEFAULTS={playerLevel:1,playerXp:0,totalXp:0,forgeDust:0,prestige:0,prestigeTokens:0,weaponUpgrades:{},secretUnlocked:[],lastRarityDrop:'',rarityRun:0};
 
-function loadGame(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(!d)return;money=Number.isFinite(d.money)?d.money:150;opened=d.opened||0;inventory=Array.isArray(d.inventory)?d.inventory:[];luckStacks=d.luckStacks||0;rainbowNext=!!d.rainbowNext;foundWeapons=new Set(d.foundWeapons||[]);collectionRewards=d.collectionRewards||[];questState=d.questState||{};jackpotProgress=d.jackpotProgress||0;jackpotClaims=d.jackpotClaims||0;jackpotLuckNext=Number(d.jackpotLuckNext)||0;soldTotal=d.soldTotal||0;highDrops=d.highDrops||0;bestDrop=d.bestDrop||null;lastDrop=d.lastDrop||lastDrop;market=d.market||{};marketTick=d.marketTick||0;playerLevel=Math.max(1,Number(d.playerLevel)||1);playerXp=Math.max(0,Number(d.playerXp)||0);totalXp=Math.max(0,Number(d.totalXp)||0);forgeDust=Math.max(0,Number(d.forgeDust)||0);prestige=Math.max(0,Number(d.prestige)||0);prestigeTokens=Math.max(0,Number(d.prestigeTokens)||0);weaponUpgrades=d.weaponUpgrades&&typeof d.weaponUpgrades==='object'?d.weaponUpgrades:{};secretUnlocked=Array.isArray(d.secretUnlocked)?d.secretUnlocked:[];lastRarityDrop=d.lastRarityDrop||'';rarityRun=Math.max(0,Number(d.rarityRun)||0);}catch(e){console.warn('Save konnte nicht geladen werden',e)}}
-function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({money,opened,inventory,luckStacks,rainbowNext,foundWeapons:[...foundWeapons],collectionRewards,questState,jackpotProgress,jackpotClaims,jackpotLuckNext,soldTotal,highDrops,bestDrop,lastDrop,market,marketTick,playerLevel,playerXp,totalXp,forgeDust,prestige,prestigeTokens,weaponUpgrades,secretUnlocked,lastRarityDrop,rarityRun}));}catch(e){console.warn('Save konnte nicht gespeichert werden',e)}}
+function loadGame(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(!d)return;money=Number.isFinite(d.money)?d.money:150;opened=d.opened||0;inventory=Array.isArray(d.inventory)?d.inventory:[];luckStacks=d.luckStacks||0;rainbowNext=!!d.rainbowNext;foundWeapons=new Set(d.foundWeapons||[]);collectionRewards=d.collectionRewards||[];questState=d.questState||{};jackpotProgress=d.jackpotProgress||0;jackpotClaims=d.jackpotClaims||0;jackpotLuckNext=Number(d.jackpotLuckNext)||0;soldTotal=d.soldTotal||0;highDrops=d.highDrops||0;bestDrop=d.bestDrop||null;lastDrop=d.lastDrop||lastDrop;market=d.market||{};marketTick=d.marketTick||0;playerLevel=Math.max(1,Number(d.playerLevel)||1);playerXp=Math.max(0,Number(d.playerXp)||0);totalXp=Math.max(0,Number(d.totalXp)||0);forgeDust=Math.max(0,Number(d.forgeDust)||0);prestige=0;prestigeTokens=0;weaponUpgrades=d.weaponUpgrades&&typeof d.weaponUpgrades==='object'?d.weaponUpgrades:{};secretUnlocked=Array.isArray(d.secretUnlocked)?d.secretUnlocked:[];lastRarityDrop=d.lastRarityDrop||'';rarityRun=Math.max(0,Number(d.rarityRun)||0);weaponPullCounts=d.weaponPullCounts&&typeof d.weaponPullCounts==='object'?d.weaponPullCounts:{};autoRollUnlocked=!!d.autoRollUnlocked;}catch(e){console.warn('Save konnte nicht geladen werden',e)}}
+function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({money,opened,inventory,luckStacks,rainbowNext,foundWeapons:[...foundWeapons],collectionRewards,questState,jackpotProgress,jackpotClaims,jackpotLuckNext,soldTotal,highDrops,bestDrop,lastDrop,market,marketTick,playerLevel,playerXp,totalXp,forgeDust,prestige,prestigeTokens,weaponUpgrades,secretUnlocked,lastRarityDrop,rarityRun,weaponPullCounts,autoRollUnlocked}));}catch(e){console.warn('Save konnte nicht gespeichert werden',e)}}
 loadGame();
 
 function fmt(n){return Math.floor(n).toLocaleString('de-DE')}
@@ -403,7 +402,7 @@ function pickItem(boxIndex){
 }
 function slotHTML(item){
  if(item.special==='luck')return `<div class="slot special-luck"><b>×2</b><small>LUCK NEXT ROLL</small></div>`;
- if(item.special==='rainbow')return `<div class="slot special-rainbow"><b>RAINBOW</b><small>2× ITEM-WERT</small></div>`;
+ if(item.special==='rainbow')return `<div class="slot special-rainbow"><b>RAINBOW</b><small>5× ITEM-WERT</small></div>`;
  return `<div class="slot rarity-${item.rarity}" data-rarity="${item.rarity}"><img src="${item.img}" alt=""><b>${item.name}</b><small>${fmt(item.value)} $</small></div>`
 }
 function makeSlots(boxIndex,count=82,target=document.getElementById('items')){
@@ -413,7 +412,7 @@ function makeSlots(boxIndex,count=82,target=document.getElementById('items')){
 }
 function unlockedReels(){return 1+(opened>=300?1:0)+(allUniqueWeapons().length>0&&foundWeapons.size>=allUniqueWeapons().length?1:0);}
 function renderReels(){const host=document.getElementById('reelContainer');if(!host)return;const count=unlockedReels();while(host.children.length<count){const clone=host.children[0].cloneNode(true);clone.removeAttribute('id');clone.querySelector('#track')?.removeAttribute('id');clone.querySelector('#items')?.removeAttribute('id');host.appendChild(clone);}while(host.children.length>count)host.removeChild(host.lastElementChild);host.querySelectorAll('.track').forEach((t,i)=>{t.dataset.reel=i;});}
-function getRollFinal(isPrimary){const luckProc=isPrimary&&Math.random()<.01;const rainbowProc=isPrimary&&!luckProc&&Math.random()<.005;const storedLuck=luckStacks,storedRainbow=rainbowNext;let final=luckProc?{special:'luck',name:'×2 Luck',rarity:'luck'}:rainbowProc?{special:'rainbow',name:'Rainbow',rarity:'rainbow'}:(()=>{luckStacks=storedLuck;const picked=pickItem(selected);luckStacks=0;if(isPrimary&&jackpotLuckNext>0)jackpotLuckNext--;return picked;})();if(final&&!final.special){if(storedRainbow)final={...final,value:final.value*2,enchanted:'Rainbow'};if(isPrimary)rainbowNext=false;}else{luckStacks=storedLuck;rainbowNext=storedRainbow;}return final;}
+function getRollFinal(isPrimary){const luckProc=isPrimary&&Math.random()<.01;const rainbowProc=isPrimary&&!luckProc&&Math.random()<.005;const storedLuck=luckStacks,storedRainbow=rainbowNext;let final=luckProc?{special:'luck',name:'×2 Luck',rarity:'luck'}:rainbowProc?{special:'rainbow',name:'Rainbow',rarity:'rainbow'}:(()=>{luckStacks=storedLuck;const picked=pickItem(selected);luckStacks=0;if(isPrimary&&jackpotLuckNext>0)jackpotLuckNext--;return picked;})();if(final&&!final.special){if(storedRainbow)final={...final,value:final.value*5,mutation:'rainbow',enchanted:'Rainbow'};if(isPrimary)rainbowNext=false;}else{luckStacks=storedLuck;rainbowNext=storedRainbow;}return final;}
 function openBox(){
  if(rolling)return;
  const b=boxes[selected];
@@ -448,19 +447,22 @@ function finishOriginalBase(items,btn){
  if(jackpotProgress>=100){jackpotProgress=100;document.getElementById('claimJackpot').disabled=false;document.getElementById('jackpotMessage').textContent='Jackpot bereit! Hol dir deinen Bonus.';}
  rolling=false;result.classList.add('flash-gold');setTimeout(()=>result.classList.remove('flash-gold'),800);btn.disabled=false;renderInventory();renderReels();update();
 }
+function toggleWeaponLock(index){const item=inventory[index];if(!item)return;item.locked=!item.locked;renderInventory();update();}
 function renderInventory(){
  const el=document.getElementById('inventory');
  if(!inventory.length){el.innerHTML='<div class="muted">Noch keine Items.</div>';return}
  el.innerHTML=inventory.map((x,i)=>`<div class="inv-item rarity-${x.rarity}">
  <img src="${x.img}" alt=""><b style="font-size:11px">${x.name}</b><div class="muted">${fmt(marketPrice(x))} $</div>
- <button class="sell" onclick="sellItem(${i})">Verkaufen</button></div>`).join('')
+ <button class="sell" onclick="sellItem(${i})" ${x.locked?'disabled':''}>Verkaufen</button></div>`).join('')
 }
-function sellItem(i){if(rolling||!inventory[i])return;money+=marketPrice(inventory[i]);soldTotal+=marketPrice(inventory[i]);inventory.splice(i,1);renderInventory();renderQuests();update()}
+function sellItem(i){if(rolling||!inventory[i]||inventory[i].locked)return;money+=marketPrice(inventory[i]);soldTotal+=marketPrice(inventory[i]);inventory.splice(i,1);renderInventory();renderQuests();update()}
 function sellAll(){
  if(rolling||!inventory.length)return;
- const total=inventory.reduce((sum,item)=>sum+marketPrice(item),0);
+ const sellable=inventory.filter(item=>!item.locked);
+ if(!sellable.length)return;
+ const total=sellable.reduce((sum,item)=>sum+marketPrice(item),0);
  money+=total;soldTotal+=total;
- inventory=[];
+ inventory=inventory.filter(item=>item.locked);
  document.getElementById('result').innerHTML=`<div class="big">Inventar verkauft</div><div class="value">+${fmt(total)} $ erhalten</div>`;
  renderInventory();update();
 }
@@ -489,10 +491,10 @@ function update(){renderMarket();renderReels();
  document.getElementById('opened').textContent=opened;
  document.getElementById('invValue').textContent=fmt(inventory.reduce((a,x)=>a+marketPrice(x),0))+' $';
  document.getElementById('openBtn').textContent=`BOX ÖFFNEN — ${fmt(boxes[selected].price)} $`;
- const total=inventory.reduce((a,x)=>a+marketPrice(x),0);
+ const sellable=inventory.filter(x=>!x.locked);const total=sellable.reduce((a,x)=>a+marketPrice(x),0);
  const sellAllBtn=document.getElementById('sellAllBtn');
- sellAllBtn.textContent=inventory.length?`ALLES VERKAUFEN · ${fmt(total)} $`:'ALLES VERKAUFEN';
- sellAllBtn.disabled=!inventory.length||rolling;
+ sellAllBtn.textContent=sellable.length?`ALLES VERKAUFEN · ${fmt(total)} $`:'ALLES VERKAUFEN';
+ sellAllBtn.disabled=!sellable.length||rolling;
  updateBailout();updateBonusStatus();renderProgressPanels();saveGame();
 }
 function allUniqueWeapons(){const all=[];for(const r of rarityList){for(const pool of (weaponPools[r]||[])){for(const item of pool){if(item&&!all.some(x=>itemKey(x)===itemKey(item)))all.push(item);}}}return all;}
@@ -527,7 +529,13 @@ function addXp(amount){
 function rarityXp(r){return ({common:5,uncommon:8,rare:12,epic:18,legendary:30,mythic:50,eternal:100,void:150})[r]||0;}
 function rarityShard(r){return ({common:1,uncommon:2,rare:4,epic:7,legendary:12,mythic:20,eternal:35,void:50})[r]||1;}
 function weaponUpgradeLevel(item){return Math.max(0,Math.min(5,Number(weaponUpgrades[itemKey(item)])||0));}
-function marketPrice(item){const level=weaponUpgradeLevel(item);const prestigeBoost=1+Math.min(10,prestige)*.05;return Math.max(1,Math.round(originalMarketPrice(item)*(1+level*.12)*prestigeBoost));}
+function marketPrice(item){
+ const level=weaponUpgradeLevel(item);
+ const marketBase=Math.max(Number(item.value)||1,originalMarketPrice(item));
+ const mutationMult=({gold:2,diamond:3,rainbow:5})[item.mutation]||1;
+ const rarityPremium=item.rarity==='eternal'?1.25:item.rarity==='void'?1.5:1;
+ return Math.max(1,Math.round(marketBase*(1+level*.25)*mutationMult*rarityPremium));
+}
 function pickRarity(box){
  const ev=currentEvent();if(ev.id==='lucky'||ev.id==='rift'){
   const odds={...box.odds};if(ev.id==='lucky'){for(const r of ['epic','legendary','mythic','eternal','void'])odds[r]=(odds[r]||0)*1.35;}
@@ -546,11 +554,22 @@ function unlockSecret(id){
 }
 function finish(items,btn){
  const knownBefore=new Set(foundWeapons);
+ items=items.map(item=>{
+  if(!item||item.special)return item;
+  const roll=Math.random();
+  const mutation=roll<0.002?'rainbow':roll<0.009?'diamond':roll<0.029?'gold':null;
+  return mutation?{...item,mutation}:item;
+ });
  const dropped=items.filter(x=>x&&!x.special);
  const duplicates=dropped.filter(x=>knownBefore.has(itemKey(x)));
  originalFinish(items,btn);
  let xpGain=20;
- dropped.forEach(x=>{xpGain+=rarityXp(x.rarity);if(knownBefore.has(itemKey(x)))forgeDust+=rarityShard(x.rarity);if(currentEvent().id==='forge')forgeDust+=2;});
+ dropped.forEach(x=>{
+ xpGain+=rarityXp(x.rarity);const key=itemKey(x);
+ weaponPullCounts[key]=(Number(weaponPullCounts[key])||0)+1;
+ forgeDust+=rarityShard(x.rarity)+(weaponPullCounts[key]>1?Math.min(10,weaponPullCounts[key]-1):0);
+ if(currentEvent().id==='forge')forgeDust+=2;
+});
  if(dropped.length===0)xpGain=20;
  addXp(xpGain);
  const primary=dropped[0];
@@ -570,7 +589,7 @@ function renderInventory(){
  if(!inventory.length){el.innerHTML='<div class="muted">Noch keine Items.</div>';return;}
  el.innerHTML=inventory.map((x,i)=>`<div class="inv-item rarity-${x.rarity}">
  <img src="${x.img}" alt=""><b style="font-size:11px">${x.name}</b><div class="muted">${fmt(marketPrice(x))} $</div>
- <div class="inventory-actions">${(x.rarity==='eternal'||x.rarity==='void')?`<button class="sell" onclick="inspectInventoryWeapon(${i})">INSPECT</button>`:''}<button class="sell" onclick="sellItem(${i})">Verkaufen</button></div></div>`).join('');
+ <div class="inventory-actions"><button class="sell" onclick="toggleWeaponLock(${i})">${x.locked?'LOCKED':'LOCKEN'}</button>${(x.rarity==='eternal'||x.rarity==='void')?`<button class="sell" onclick="inspectInventoryWeapon(${i})">INSPECT</button>`:''}<button class="sell" onclick="sellItem(${i})">Verkaufen</button></div></div>`).join('');
 }
 function renderCollection(){
  const unique=allUniqueWeapons().filter(x=>x&&x.name);const found=unique.filter(x=>foundWeapons.has(itemKey(x))).length;const pct=unique.length?found/unique.length*100:0;
@@ -578,17 +597,17 @@ function renderCollection(){
  document.getElementById('collectionProgress').style.width=pct+'%';
  document.getElementById('collectionGrid').innerHTML=unique.map((x,i)=>{const yes=foundWeapons.has(itemKey(x));const lvl=weaponUpgradeLevel(x);return `<div class="collection-item ${yes?'found':''}">${yes?`<img src="${x.img}" alt="">`:'<div style="height:48px;display:grid;place-items:center;font-size:24px">🔒</div>'}<b>${yes?x.name:'Unentdeckt'}</b><div>${rarityNames[x.rarity]||x.rarity}</div>${yes?`<small>Upgrade ${lvl}/5</small>${x.rarity==='eternal'||x.rarity==='void'?`<button class="sell" onclick="inspectCollectionWeapon(${i})">3D ansehen</button>`:''}`:''}</div>`}).join('');
 }
-function upgradeCost(item){const idx=rarityList.indexOf(item.rarity);const next=weaponUpgradeLevel(item)+1;return 12+Math.max(0,idx)*9+next*18;}
+function upgradeCost(item){const idx=rarityList.indexOf(item.rarity);const next=weaponUpgradeLevel(item)+1;return Math.round((12+Math.max(0,idx)*9+next*18)*(item.rarity==='eternal'?1.5:item.rarity==='void'?1.8:1));}
 function upgradeWeapon(index){
  const item=allUniqueWeapons()[index];if(!item||!foundWeapons.has(itemKey(item)))return;
  const level=weaponUpgradeLevel(item);if(level>=5){return;}
  const cost=upgradeCost(item);if(forgeDust<cost){document.getElementById('result').innerHTML=`<div class="big">Nicht genug Schmiedestaub</div><div class="muted">Benötigt: ${cost} · Vorhanden: ${forgeDust}</div>`;return;}
- forgeDust-=cost;weaponUpgrades[itemKey(item)]=level+1;document.getElementById('result').innerHTML=`<div class="big">⚒️ Waffe verbessert!</div><div class="value">${item.name} · Level ${level+1}/5 · +${12}% Marktwert pro Upgrade-Stufe</div>`;update();
+ forgeDust-=cost;weaponUpgrades[itemKey(item)]=level+1;document.getElementById('result').innerHTML=`<div class="big">⚒️ Waffe verbessert!</div><div class="value">${item.name} · Level ${level+1}/5 · +25% Verkaufswert pro Upgrade-Stufe</div>`;update();
 }
 function renderForge(){
  const found=allUniqueWeapons().filter(x=>foundWeapons.has(itemKey(x)));
- document.getElementById('forgeDust').textContent=fmt(forgeDust);document.getElementById('prestigeTokens').textContent=prestigeTokens;
- document.getElementById('forgeList').innerHTML=found.length?found.map(x=>{const level=weaponUpgradeLevel(x),cost=upgradeCost(x);const idx=allUniqueWeapons().indexOf(x);return `<div class="forge-card"><img src="${x.img}" alt=""><b>${x.name}</b><span>${rarityNames[x.rarity]} · Stufe ${level}/5</span><div class="progress"><span style="width:${level*20}%"></span></div><small>Wertbonus: +${level*12}%</small><button class="sell" onclick="upgradeWeapon(${idx})" ${level>=5||forgeDust<cost?'disabled':''}>${level>=5?'MAX LEVEL':'AUFWERTEN · '+cost+' ✦'}</button></div>`}).join(''):'<div class="muted">Entdecke Waffen, um sie hier aufzuwerten.</div>';
+ document.getElementById('forgeDust').textContent=fmt(forgeDust);const pullTotal=Object.values(weaponPullCounts).reduce((a,n)=>a+(Number(n)||0),0);const pullEl=document.getElementById('pullCountTotal');if(pullEl)pullEl.textContent=fmt(pullTotal);
+ document.getElementById('forgeList').innerHTML=found.length?found.map(x=>{const level=weaponUpgradeLevel(x),cost=upgradeCost(x);const idx=allUniqueWeapons().indexOf(x);return `<div class="forge-card"><img src="${x.img}" alt=""><b>${x.name}</b><span>${rarityNames[x.rarity]} · Stufe ${level}/5</span><div class="progress"><span style="width:${level*20}%"></span></div><small>Wertbonus: +${level*25}% · gezogen: ${weaponPullCounts[itemKey(x)]||0}×</small><button class="sell" onclick="upgradeWeapon(${idx})" ${level>=5||forgeDust<cost?'disabled':''}>${level>=5?'MAX LEVEL':'AUFWERTEN · '+cost+' ✦'}</button></div>`}).join(''):'<div class="muted">Entdecke Waffen, um sie hier aufzuwerten.</div>';
 }
 function renderSecrets(){
  const defs=[['777','Die Glückszahl','Erreiche exakt 777 All-Time Rolls.'],['eternal','Ewige Entdeckung','Finde deine erste Eternal-Waffe.'],['void','Jenseits der Leere','Finde deine erste Void-Waffe.'],['allrarities','Regenbogen-Sammler','Entdecke mindestens eine Waffe jeder Seltenheit.'],['fullcollection','Unendlicher Sammler','Vervollständige die gesamte Waffensammlung.'],['tenk','Zehntausend Rolls','Erreiche 10.000 All-Time Rolls.']];
@@ -602,10 +621,6 @@ function renderLongTerm(){
  const ev=currentEvent();document.getElementById('eventName').textContent=ev.name;document.getElementById('eventDesc').textContent=ev.desc+' Bonus: '+ev.bonus;
  const left=eventTimeLeft();document.getElementById('eventTimer').textContent=`${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`;
  document.getElementById('eventHistory').textContent='Das nächste Event startet automatisch beim Wechsel des 30-Minuten-Zyklus.';
- const reqLevel=50+prestige*10,reqRolls=5000+prestige*2500;const ready=playerLevel>=reqLevel&&opened>=reqRolls;
- document.getElementById('prestigeLevel').textContent=prestige;document.getElementById('prestigeBonus').textContent='+'+Math.min(50,prestige*5)+'%';
- document.getElementById('prestigeDesc').textContent=`Nächste Freischaltung: Level ${reqLevel} und ${fmt(reqRolls)} All-Time Rolls. Prestige setzt Geld und Inventar zurück, bewahrt Sammlung, Level und Upgrades und erhöht deinen dauerhaften Verkaufsbonus.`;
- const btn=document.getElementById('prestigeBtn');btn.disabled=!ready||rolling;btn.textContent=ready?'PRESTIGE AKTIVIEREN':`LEVEL ${reqLevel} · ${fmt(reqRolls)} ROLLS`;
  renderForge();renderSecrets();
 }
 let lastEventSlot=Math.floor(Date.now()/1800000);
@@ -615,13 +630,7 @@ function updateEventClock(){
  const left=eventTimeLeft();const timer=document.getElementById('eventTimer');
  if(timer)timer.textContent=`${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`;
 }
-function doPrestige(){
- const reqLevel=50+prestige*10,reqRolls=5000+prestige*2500;if(rolling||playerLevel<reqLevel||opened<reqRolls)return;
- if(!confirm('Prestige aktivieren? Dein Geld und dein Inventar werden zurückgesetzt. Sammlung, Level und Waffen-Upgrades bleiben erhalten.'))return;
- prestige++;prestigeTokens++;money=150;inventory=[];jackpotProgress=0;luckStacks=0;rainbowNext=false;
- document.getElementById('result').innerHTML=`<div class="big">♛ PRESTIGE ${prestige}!</div><div class="value">+5% permanenter Verkaufsbonus · +1 Prestige-Münze</div>`;
- update();
-}
+
 function showWeaponInspect(item){
  if(!item||!['eternal','void'].includes(item.rarity))return;
  const panel=document.getElementById('inspectPanel'),overlay=document.getElementById('inspectOverlay'),model=document.getElementById('inspectModel');
@@ -657,7 +666,27 @@ document.getElementById('claimJackpot').addEventListener('click',claimJackpot);
 document.getElementById('openBtn').addEventListener('click',openBox);
 document.getElementById('bailoutBtn').addEventListener('click',claimBailout);
 document.getElementById('sellAllBtn').addEventListener('click',sellAll);
-document.getElementById('prestigeBtn').addEventListener('click',doPrestige);bindInspectControls();
+document.getElementById('autoRollBtn').addEventListener('click',()=>{
+ const btn=document.getElementById('autoRollBtn');
+ if(!autoRollUnlocked){
+  if(money<100000000){document.getElementById('result').innerHTML='<div class="big">Nicht genug Geld</div><div class="muted">Auto-Roll kostet einmalig 100.000.000 $.</div>';return;}
+  money-=100000000;autoRollUnlocked=true;autoRollEnabled=true;
+ }else autoRollEnabled=!autoRollEnabled;
+ update();btn.textContent=autoRollEnabled?'AUTO-ROLL · AN':'AUTO-ROLL · AUS';
+});
+setInterval(()=>{if(autoRollEnabled&&!rolling){if(money>=boxes[selected].price)openBox();else{autoRollEnabled=false;const b=document.getElementById('autoRollBtn');if(b)b.textContent='AUTO-ROLL · AUS';}}},600);
+
+document.getElementById('autoRollBtn').addEventListener('click',()=>{
+ const btn=document.getElementById('autoRollBtn');
+ if(!autoRollUnlocked){
+  if(money<100000000){document.getElementById('result').innerHTML='<div class="big">Nicht genug Geld</div><div class="muted">Auto-Roll kostet einmalig 100.000.000 $.</div>';return;}
+  money-=100000000;autoRollUnlocked=true;autoRollEnabled=true;
+ }else autoRollEnabled=!autoRollEnabled;
+ update();btn.textContent=autoRollEnabled?'AUTO-ROLL · AN':'AUTO-ROLL · AUS';
+});
+setInterval(()=>{if(autoRollEnabled&&!rolling){if(money>=boxes[selected].price)openBox();else{autoRollEnabled=false;const b=document.getElementById('autoRollBtn');if(b)b.textContent='AUTO-ROLL · AUS';}}},600);
+
+bindInspectControls();
 ensureDailyQuests();ensureMarket();renderCases();renderOdds();renderInventory();update();renderProgressPanels();setInterval(()=>{renderMarket();updateEventClock();saveGame();},1000);
 </script>
 </body>
